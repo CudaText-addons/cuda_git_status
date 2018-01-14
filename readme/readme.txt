@@ -3,8 +3,8 @@ for active file tab, it shows information about Git repo, in statusbar in additi
 
 - branch name, e.g. "master"
 - * symbol, if this branch is not clean
-- -N, for number of commits behind repo
-- +M, for number of commits above repo
+- +M, for number of commits ahead
+- -N, for number of commits behind
 
 ported from GitStatusBar plugin for Sublime Text.
 author: Alexey (CudaText)
