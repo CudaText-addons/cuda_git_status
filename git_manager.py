@@ -5,8 +5,7 @@ import subprocess
 
 
 class GitManager:
-    def __init__(self, ed):
-        self.ed = ed
+    def __init__(self):
         self.git = 'git'
         self.prefix = ''
 
@@ -34,7 +33,7 @@ class GitManager:
             return stdoutdata.decode('utf-8')
 
     def getcwd(self):
-        f = self.ed.get_filename()
+        f = self.filename
         cwd = None
         if f:
             cwd = os.path.dirname(f)
@@ -75,7 +74,11 @@ class GitManager:
                     b = int(m.group(1))
         return (a, b)
 
-    def badge(self):
+    def badge(self, filename):
+        self.filename = filename
+        if not self.filename:
+            return ""
+
         branch = self.branch()
         if not branch:
             return ""

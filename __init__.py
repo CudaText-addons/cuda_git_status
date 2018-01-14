@@ -7,6 +7,7 @@ CELL_TAG = 100 #uniq value for all plugins adding cells via statusbar_proc()
 CELL_WIDTH = 150 #width of cell in pixels
 
 icon_branch = os.path.join(os.path.dirname(__file__), 'git-branch.png')
+gitmanager = GitManager()
 
 
 class Command:
@@ -28,12 +29,12 @@ class Command:
         index = imagelist_proc(imglist, IMAGELIST_ADD, value=icon_branch)
         statusbar_proc('main', STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=index)
 
-        self.gitmanager = GitManager(ed)
-
 
     def update(self):
-        text = self.gitmanager.badge()
+
+        text = gitmanager.badge(ed.get_filename())
         statusbar_proc('main', STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=text)
+
 
     def on_focus(self, ed_self):
         self.update()
