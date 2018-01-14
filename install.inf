@@ -1,0 +1,11 @@
+[info]
+title=Git Status Bar
+desc=Shows Git information in statusbar: current branch name, clean state, etc.
+type=cudatext-plugin
+subdir=cuda_git_status
+homepage=https://github.com/CudaText-addons/cuda_git_status
+
+[item1]
+section=events
+events=on_focus,on_open,on_save
+
