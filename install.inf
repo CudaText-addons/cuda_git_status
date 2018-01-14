@@ -1,5 +1,5 @@
 [info]
-title=Git Status Bar
+title=Git Status
 desc=Shows Git information in statusbar: current branch name, clean state, etc.
 type=cudatext-plugin
 subdir=cuda_git_status
