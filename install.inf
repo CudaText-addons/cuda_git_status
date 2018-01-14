@@ -10,3 +10,8 @@ api=1.0.211
 section=events
 events=on_focus,on_open,on_save
 
+[item5]
+section=commands
+caption=Git Status\Config
+method=open_config
+menu=o

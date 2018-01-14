@@ -7,5 +7,7 @@ for active file tab, it shows information about Git repo, in statusbar in additi
 - -N, for number of commits behind
 
 ported from GitStatusBar plugin for Sublime Text.
+plugin has config-file with few options. to edit it, call menu item "Options / Settings-plugins / Git Status / Config", after editing restart editor.
+
 author: Alexey (CudaText)
 license: MIT
