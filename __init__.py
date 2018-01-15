@@ -5,7 +5,6 @@ from .git_manager import GitManager
 CELL_TAG_INFO = 20 #CudaText built-in value for last statusbar cell
 CELL_TAG = 100 #uniq value for all plugins adding cells via statusbar_proc()
 
-icon_branch = os.path.join(os.path.dirname(__file__), 'git-branch.png')
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_git_status.ini')
 
 gitmanager = GitManager()
@@ -29,18 +28,25 @@ class Command:
             imglist = imagelist_proc(0, IMAGELIST_CREATE)
             statusbar_proc('main', STATUSBAR_SET_IMAGELIST, value=imglist)
 
-        index = imagelist_proc(imglist, IMAGELIST_ADD, value=icon_branch)
+        fn_icon = os.path.join(
+                    os.path.dirname(__file__),
+                    'git-branch.png' if not self.white_icon else 'git-branch_white.png'
+                    )
+
+        index = imagelist_proc(imglist, IMAGELIST_ADD, value=fn_icon)
         statusbar_proc('main', STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=index)
 
 
     def load_ops(self):
 
         self.cell_width = int(ini_read(fn_config, 'op', 'statusbar_cell_width', '150'))
+        self.white_icon = ini_read(fn_config, 'op', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'op', 'git_program', 'git')
 
     def save_ops(self):
 
         ini_write(fn_config, 'op', 'statusbar_cell_width', str(self.cell_width))
+        ini_write(fn_config, 'op', 'white_icon', '1' if self.white_icon else '0')
         ini_write(fn_config, 'op', 'git_program', gitmanager.git)
 
     def open_config(self):

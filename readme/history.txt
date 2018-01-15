@@ -1,5 +1,8 @@
 
 2018.01.15
++ config file: added option "white_icon" (0/1)
+
+2018.01.15
 + config file added with 2 options; to open, use "Options / Settings-plugins / Git Status / Config", then restart app
 
 2018.01.14
