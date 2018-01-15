@@ -20,7 +20,6 @@ class Command:
         if not index:
             index = -1
         statusbar_proc('main', STATUSBAR_ADD_CELL, index=index, tag=CELL_TAG)
-        statusbar_proc('main', STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=self.cell_width)
         statusbar_proc('main', STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
 
         imglist = statusbar_proc('main', STATUSBAR_GET_IMAGELIST)
@@ -33,8 +32,7 @@ class Command:
                     'git-branch.png' if not self.white_icon else 'git-branch_white.png'
                     )
 
-        index = imagelist_proc(imglist, IMAGELIST_ADD, value=fn_icon)
-        statusbar_proc('main', STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=index)
+        self.icon_index = imagelist_proc(imglist, IMAGELIST_ADD, value=fn_icon)
 
 
     def load_ops(self):
@@ -59,6 +57,14 @@ class Command:
 
         text = gitmanager.badge(ed.get_filename())
         statusbar_proc('main', STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=text)
+
+        #show icon?
+        icon = self.icon_index if text else -1
+        statusbar_proc('main', STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=icon)
+
+        #show panel?
+        size = self.cell_width if text else 0
+        statusbar_proc('main', STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=size)
 
 
     def on_focus(self, ed_self):

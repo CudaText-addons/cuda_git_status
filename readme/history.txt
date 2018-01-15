@@ -1,5 +1,6 @@
 
 2018.01.15
++ auto-hide icon and cell in the statusbar, for non-git files
 + config file: added option "white_icon" (0/1)
 
 2018.01.15
