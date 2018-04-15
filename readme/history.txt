@@ -1,5 +1,6 @@
 
 2018.04.15
++ changed event on_focus->on_tab_change
 - fixed distorted statusbar icon
 
 2018.01.15

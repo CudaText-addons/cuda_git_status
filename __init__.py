@@ -67,7 +67,7 @@ class Command:
         statusbar_proc('main', STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=size)
 
 
-    def on_focus(self, ed_self):
+    def on_tab_change(self, ed_self):
         self.update()
 
     def on_open(self, ed_self):

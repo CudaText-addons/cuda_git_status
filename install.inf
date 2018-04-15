@@ -8,7 +8,7 @@ api=1.0.211
 
 [item1]
 section=events
-events=on_focus,on_open,on_save
+events=on_open,on_save,on_tab_change
 
 [item5]
 section=commands
