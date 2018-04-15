@@ -11,3 +11,4 @@ plugin has config-file with few options. to edit it, call menu item "Options / S
 
 author: Alexey (CudaText)
 license: MIT
+icon from GitHub, license: MIT
