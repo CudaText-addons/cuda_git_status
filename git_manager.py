@@ -51,6 +51,19 @@ class GitManager:
         return exit_code == 1
 
     def unpushed_info(self, branch):
+        a, b = 0, 0
+        if branch:
+            exit_code, output = self.run_git(["branch", "-v"])
+            if output:
+                m = re.search(r"\* .*?\[behind ([0-9])+\]", output, flags=re.MULTILINE)
+                if m:
+                    a = int(m.group(1))
+                m = re.search(r"\* .*?\[ahead ([0-9])+\]", output, flags=re.MULTILINE)
+                if m:
+                    b = int(m.group(1))
+        return (a, b)
+
+    def unpushed_info__new(self, branch):
 
         #TODO - support 'main' too
         branch_main = 'master'
@@ -76,5 +89,8 @@ class GitManager:
         if self.is_dirty():
             ret = ret + "*"
         a, b = self.unpushed_info(branch)
-        return f'{ret} ({a},{b})'
-
+        if a:
+            ret = ret + "-%d" % a
+        if b:
+            ret = ret + "+%d" % b
+        return self.prefix + ret
