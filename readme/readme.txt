@@ -9,6 +9,8 @@ for active file tab, it shows information about Git repo, in statusbar in additi
 ported from GitStatusBar plugin for Sublime Text.
 plugin has config-file with few options. to edit it, call menu item "Options / Settings-plugins / Git Status / Config", after editing restart editor.
 
-author: Alexey (CudaText)
+authors:
+  Alexey Torgashin (CudaText)
+  David Emanuel Santiago (@demanuel at GitHub)
 license: MIT
 icon from GitHub, license: MIT
