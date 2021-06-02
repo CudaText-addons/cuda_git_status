@@ -40,7 +40,10 @@ class GitManager:
         if exit_code != 0:
             return ''
         m = re.search(r"(?:at|branch)\s(.*?)\n",output)
-        return m.group(1)
+        if m:
+            return m.group(1)
+        else:
+            return ''
 
     def is_dirty(self):
         (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
@@ -55,7 +58,10 @@ class GitManager:
         if branch:
             (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', f'{branch_main}...{branch}'])
             m = re.search(r"(\d+)\s+(\d+)", output)
-            return (int(m.group(1)), int(m.group(2)))
+            if m:
+                return (int(m.group(1)), int(m.group(2)))
+            else:
+                return (0,0)
         return (0,0)
 
     def badge(self, filename):
