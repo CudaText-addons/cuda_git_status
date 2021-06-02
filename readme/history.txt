@@ -1,7 +1,7 @@
 
 2021.06.03
-- fix: main code refactored to fix plugin's cell shown as first statusbar cell
-+ add: git_manager part is rewritten by @demanuel, to speedup ui tab-switching
+* change: git_manager part is rewritten by @demanuel, to speedup ui tab-switching
+- fix: main code refactored to fix plugin's cell position as first cell
 
 2018.04.15
 + changed event on_focus->on_tab_change
