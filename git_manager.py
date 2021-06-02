@@ -48,8 +48,12 @@ class GitManager:
         return exit_code == 1
 
     def unpushed_info(self, branch):
+
+        #TODO - support 'main' too
+        branch_main = 'master'
+
         if branch:
-            (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', f'master...{branch}'])
+            (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', f'{branch_main}...{branch}'])
             m = re.search(r"(\d+)\s+(\d+)", output)
             return (int(m.group(1)), int(m.group(2)))
         return (0,0)
