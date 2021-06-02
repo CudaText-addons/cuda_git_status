@@ -1,4 +1,7 @@
 
+2021.06.03
++ add: git_manager part is rewritten by @demanuel, to speedup ui tab-switching
+
 2018.04.15
 + changed event on_focus->on_tab_change
 - fixed distorted statusbar icon
