@@ -1,4 +1,6 @@
 import os
+from queue import Queue
+from threading import Thread, Event
 from cudatext import *
 from .git_manager import GitManager
 
@@ -8,11 +10,33 @@ BAR_H = 'main'
 
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_git_status.ini')
 
+### Threaded
+is_getting_badge = Event()
+
 gitmanager = GitManager()
 
+def gitman_loop(q_fns, q_badges):
+    while True:
+        fn = q_fns.get()    # wait for request
+        is_getting_badge.set()
+        while not q_fns.empty():    # get last if have multiple requests
+            fn = q_fns.get()
+
+        #if fn is None:
+            #return
+
+        _badge = gitmanager.badge(fn)
+        q_badges.put(_badge)
+        is_getting_badge.clear()
+#end Threaded
 
 class Command:
     def __init__(self):
+
+        self.is_loading_sesh = False # to ignore 'on_open()' while loading session
+        self.badge_requests = None
+        self.badge_results = None
+        self.t_gitman = None
 
         self.load_ops()
         self.load_icon()
@@ -61,33 +85,84 @@ class Command:
         if os.path.isfile(fn_config):
             file_open(fn_config)
 
-    def update(self, reason):
+
+    def request_update(self, ed_self, _reason):
+        """ * send request to badge-thread
+            * start timer to check for result
+        """
+
+        if self.is_loading_sesh:
+            return
+
+        if self.t_gitman is None:
+            self.badge_requests = Queue()
+            self.badge_results = Queue()
+
+            self.t_gitman = Thread(
+                    target=gitman_loop,
+                    args=(self.badge_requests, self.badge_results),
+                    name='gitstatus_read',
+                    daemon=True,
+            )
+            self.t_gitman.start()
+
+        _filename = (ed_self or ed).get_filename()
+        self.badge_requests.put(_filename)
+
+        timer_proc(TIMER_START, self.on_timer, 50)
+
+    def on_timer(self, tag='', info=''):
+        """ * check if thread returned new badge
+            * stop timer if thread is done
+        """
+
+        if not self.badge_results.empty(): # have new badge
+            _badge = self.badge_results.get()
+            self.update(_badge)
+
+        # stop
+        if self.badge_requests.empty() \
+                and self.badge_results.empty() \
+                and not is_getting_badge.is_set():
+            timer_proc(TIMER_STOP, self.on_timer, 0)
+
+    def update(self, badge):
 
         if not self.init_bar_cell():
             #print('[Git Status] Statusbar not ready, '+reason)
             return
         #print('[Git Status] Statusbar ready, '+reason)
-        
-        text = gitmanager.badge(ed.get_filename())
-        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=text)
+
+        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=badge)
 
         #show icon?
-        icon = self.icon_index if text else -1
+        icon = self.icon_index if badge else -1
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=icon)
 
         #show panel?
-        size = self.cell_width if text else 0
+        size = self.cell_width if badge else 0
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=size)
 
 
     def on_tab_change(self, ed_self):
-        self.update('on_tab_change')
+        self.request_update(ed_self, 'on_tab_change')
 
     def on_open(self, ed_self):
-        self.update('on_open')
+        self.request_update(ed_self, 'on_open')
 
     def on_save(self, ed_self):
-        self.update('on_save')
+        self.request_update(ed_self, 'on_save')
 
     def on_focus(self, ed_self):
-        self.update('on_focus')
+        self.request_update(ed_self, 'on_focus')
+
+    def on_state(self, ed_self, state):
+        # to skip on_open() when loading session
+        if state == APPSTATE_SESSION_LOAD_BEGIN: # started
+            self.is_loading_sesh = True
+
+        elif state in [APPSTATE_SESSION_LOAD_FAIL, APPSTATE_SESSION_LOAD]: # ended
+            self.is_loading_sesh = False
+            self.request_update(ed, 'session loaded')
+
+
