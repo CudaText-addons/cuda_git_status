@@ -50,7 +50,7 @@ class GitManager:
         
         return exit_code == 1
 
-    def unpushed_info(self, branch):
+    def unpushed_info__old(self, branch):
         a, b = 0, 0
         if branch:
             exit_code, output = self.run_git(["branch", "-v"])
@@ -63,13 +63,9 @@ class GitManager:
                     b = int(m.group(1))
         return (a, b)
 
-    def unpushed_info__new(self, branch):
-
-        #TODO - support 'main' too
-        branch_main = 'master'
-
+    def unpushed_info(self, branch):
         if branch:
-            (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', f'{branch_main}...{branch}'])
+            (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', 'origin/'+branch+'...'+branch])
             m = re.search(r"(\d+)\s+(\d+)", output)
             if m:
                 return (int(m.group(1)), int(m.group(2)))
