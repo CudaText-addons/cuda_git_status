@@ -8,7 +8,6 @@ api=1.0.381
 
 [item1]
 section=events
-#events=on_open,on_save,on_tab_change,on_focus
 events=on_open,on_save,on_focus,on_state
 
 [item5]
