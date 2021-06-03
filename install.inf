@@ -4,12 +4,12 @@ desc=Shows Git information in statusbar: current branch name, clean state, etc.
 type=cudatext-plugin
 subdir=cuda_git_status
 homepage=https://github.com/CudaText-addons/cuda_git_status
-api=1.0.228
+api=1.0.381
 
 [item1]
 section=events
 #events=on_open,on_save,on_tab_change,on_focus
-events=on_open,on_save,on_focus
+events=on_open,on_save,on_focus,on_state
 
 [item5]
 section=commands

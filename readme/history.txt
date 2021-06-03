@@ -1,6 +1,8 @@
 
 2021.06.03
 * change: git_manager part is rewritten by @demanuel, to speedup ui tab-switching
+* change: move git manager to a thread (@halfbrained)
+* change: ignore unnecessary `on_open()` during session-loading (@halfbrained)
 - fix: main code refactored to fix plugin's cell position as first cell
 
 2018.04.15
