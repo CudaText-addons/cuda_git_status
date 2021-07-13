@@ -22,6 +22,7 @@ class GitManager:
         else:
             my_env = os.environ.copy()
             my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
+            my_env["LANG"] = "en_US"
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                  cwd=cwd,env=my_env)
         p.wait()
