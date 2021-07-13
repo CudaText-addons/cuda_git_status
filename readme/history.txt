@@ -1,6 +1,7 @@
 
 2021.07.13
-- fix: plugin didn't work with non-EN locale on Linux
+- fix: don't call Git too often (@halfbrained)
+- fix: plugin didn't work with non-EN locale on Linux (@ildarkhasanshin)
 
 2021.06.03
 * change: git_manager part is rewritten by @demanuel, to speedup ui tab-switching
