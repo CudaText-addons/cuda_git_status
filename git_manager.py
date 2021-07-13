@@ -1,4 +1,3 @@
-import sys
 import os
 import re
 import subprocess
@@ -10,10 +9,9 @@ class GitManager:
         self.prefix = ''
 
     def run_git(self, args):
-        plat = sys.platform
         cmd = [self.git] + args
         cwd = self.getcwd()
-        if plat == "win32":
+        if os.name=='nt':
             # make sure console does not come up
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -27,6 +25,12 @@ class GitManager:
                                  cwd=cwd,env=my_env)
         p.wait()
         stdoutdata, _ = p.communicate()
+        ''' #debug
+        if stdoutdata:
+            print('Git for:', repr(args), ', gets:', stdoutdata)
+        else:
+            print('Git fails:', repr(args))        
+        '''
         return (p.returncode, stdoutdata.decode('utf-8'))
 
     def getcwd(self):
