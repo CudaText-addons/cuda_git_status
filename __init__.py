@@ -1,6 +1,7 @@
 import os
 from queue import Queue
 from threading import Thread, Event
+import time
 from cudatext import *
 from .git_manager import GitManager
 
@@ -37,6 +38,8 @@ class Command:
         self.badge_requests = None
         self.badge_results = None
         self.t_gitman = None
+
+        self._last_request = None
 
         self.load_ops()
         self.load_icon()
@@ -107,6 +110,14 @@ class Command:
             self.t_gitman.start()
 
         _filename = (ed_self or ed).get_filename()
+
+        if (self._last_request
+                and  self._last_request[0] == _filename
+                and  self._last_request[1]+0.25 > time.time()): # skip if same request in last 250ms
+            return
+
+        self._last_request = (_filename, time.time())
+
         self.badge_requests.put(_filename)
 
         timer_proc(TIMER_START, self.on_timer, 50)
