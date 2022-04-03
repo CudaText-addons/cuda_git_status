@@ -25,12 +25,12 @@ class GitManager:
                                  cwd=cwd,env=my_env)
         p.wait()
         stdoutdata, _ = p.communicate()
-        #debug
+        ''' #debug
         if stdoutdata:
             print('Git for:', repr(args), ', gets:', stdoutdata)
         else:
             print('Git fails:', repr(args))
-
+        '''
         return (p.returncode, stdoutdata.decode('utf-8'))
 
     def getcwd(self):
