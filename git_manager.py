@@ -44,8 +44,7 @@ class GitManager:
         (exit_code, output) = self.run_git(["branch"])
         if exit_code != 0:
             return ''
-        output = output.replace('*', '').strip()
-        return output
+        return output.replace('*', '').strip()
 
     def is_dirty(self):
         (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
