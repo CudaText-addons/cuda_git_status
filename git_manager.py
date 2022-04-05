@@ -29,7 +29,7 @@ class GitManager:
         if stdoutdata:
             print('Git for:', repr(args), ', gets:', stdoutdata)
         else:
-            print('Git fails:', repr(args))        
+            print('Git fails:', repr(args))
         '''
         return (p.returncode, stdoutdata.decode('utf-8'))
 
@@ -41,18 +41,14 @@ class GitManager:
         return cwd
 
     def branch(self):
-        (exit_code, output) = self.run_git(["status", "-u", "no"])
+        (exit_code, output) = self.run_git(["rev-parse", "--abbrev-ref", "HEAD"])
         if exit_code != 0:
             return ''
-        m = re.search(r"(?:at|branch)\s(.*?)\n",output)
-        if m:
-            return m.group(1)
-        else:
-            return ''
+        return output.strip()
 
     def is_dirty(self):
         (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
-        
+
         return exit_code == 1
 
     def unpushed_info__old(self, branch):
