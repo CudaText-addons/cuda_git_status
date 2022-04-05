@@ -41,16 +41,10 @@ class GitManager:
         return cwd
 
     def branch(self):
-        (exit_code, output) = self.run_git(["branch"])
-        branches = (output.split("\n"))
-        branch = ''
-        for branch_ in branches:
-            star = branch_.split('*')
-            if len(star) == 2:
-                branch = star[1].split()[-1]
+        (exit_code, output) = self.run_git(["rev-parse", "--abbrev-ref", "HEAD"])
         if exit_code != 0:
             return ''
-        return branch
+        return output.strip()
 
     def is_dirty(self):
         (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
