@@ -6,6 +6,8 @@ from cudatext import *
 d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
 MY_DECOR_COLOR = d['LightBG3']['color_back']
 
+DIFF_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
+
 class GitManager:
     def __init__(self):
         self.git = 'git'
@@ -81,6 +83,7 @@ class GitManager:
         (exit_code, output) = self.run_git(["diff", "-U0", filename_])
         if exit_code != 0:
             return ''
+        ed.decor(DECOR_DELETE_BY_TAG)
         parts = re.findall(r"@@ \-(.*) @@", output)
         lines_ = []
         for part in parts:
@@ -98,10 +101,10 @@ class GitManager:
                     begin_ = int(line_[0]) - 1
                     end_ = int(line_[0]) + int(line_[1]) - 1
                     for l in range(begin_, end_):
-                        ed.decor(DECOR_SET, line=l, tag=l, text='', color=MY_DECOR_COLOR)
+                        ed.decor(DECOR_SET, line=l, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
                 else:
                     line__ = int(line_) - 1
-                    ed.decor(DECOR_SET, line=line__, tag=line__, text='', color=MY_DECOR_COLOR)
+                    ed.decor(DECOR_SET, line=line__, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
 
         return output
 
