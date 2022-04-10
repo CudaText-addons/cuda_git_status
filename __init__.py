@@ -175,4 +175,3 @@ class Command:
         elif state in [APPSTATE_SESSION_LOAD_FAIL, APPSTATE_SESSION_LOAD]: # ended
             self.is_loading_sesh = False
             self.request_update(ed, 'session loaded')
-
