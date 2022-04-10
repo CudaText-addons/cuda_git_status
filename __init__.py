@@ -176,4 +176,3 @@ class Command:
             self.is_loading_sesh = False
             self.request_update(ed, 'session loaded')
 
-

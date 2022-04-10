@@ -1,7 +1,7 @@
 import os
 import re
 import subprocess
-
+from cudatext import *
 
 class GitManager:
     def __init__(self):
@@ -74,10 +74,41 @@ class GitManager:
                 return (0,0)
         return (0,0)
 
+    def diff(self, filename_):
+        (exit_code, output) = self.run_git(["diff", "-U0", filename_])
+        if exit_code != 0:
+            return ''
+        parts = re.findall(r"@@ \-(.*) @@", output)
+        lines_ = []
+        for part in parts:
+            lines = part.split(' +')
+            for line in lines:
+                parts_ = line.split(',')
+                if len(parts_) == 2:
+                    if int(parts_[1]) != 0:
+                        lines_.append(parts_)
+                else:
+                    lines_.append(line)
+        if len(lines_) > 0:
+            diff_color_ = 0x384C38
+            for line_ in lines_:
+                if len(line_) == 2 and isinstance(line_, list):
+                    begin_ = int(line_[0]) - 1
+                    end_ = int(line_[0]) + int(line_[1]) - 1
+                    for l in range(begin_, end_):
+                        ed.decor(DECOR_SET, line=l, tag=0, text='', color=diff_color_)
+                else:
+                    line__ = int(line_) - 1
+                    ed.decor(DECOR_SET, line=line__, tag=0, text='', color=diff_color_)
+
+        return output
+
     def badge(self, filename):
         self.filename = filename
         if not self.filename:
             return ""
+
+        self.diff(self.filename)
 
         branch = self.branch()
         if not branch:
