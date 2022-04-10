@@ -3,6 +3,8 @@ import re
 import subprocess
 from cudatext import *
 
+DIFF_COLOR_ = 0x384C38
+
 class GitManager:
     def __init__(self):
         self.git = 'git'
@@ -90,16 +92,15 @@ class GitManager:
                 else:
                     lines_.append(line)
         if len(lines_) > 0:
-            diff_color_ = 0x384C38
             for line_ in lines_:
                 if len(line_) == 2 and isinstance(line_, list):
                     begin_ = int(line_[0]) - 1
                     end_ = int(line_[0]) + int(line_[1]) - 1
                     for l in range(begin_, end_):
-                        ed.decor(DECOR_SET, line=l, tag=0, text='', color=diff_color_)
+                        ed.decor(DECOR_SET, line=l, tag=0, text='', color=DIFF_COLOR_)
                 else:
                     line__ = int(line_) - 1
-                    ed.decor(DECOR_SET, line=line__, tag=0, text='', color=diff_color_)
+                    ed.decor(DECOR_SET, line=line__, tag=0, text='', color=DIFF_COLOR_)
 
         return output
 
