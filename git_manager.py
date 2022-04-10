@@ -83,9 +83,9 @@ class GitManager:
         parts = re.findall(r"@@ \-(.*) @@", output)
         lines_ = []
         for part in parts:
-            lines = part.split(' +')
+            lines = part.split(' +', maxsplit=1)
             for line in lines:
-                parts_ = line.split(',')
+                parts_ = line.split(',', maxsplit=1)
                 if len(parts_) == 2:
                     if int(parts_[1]) != 0:
                         lines_.append(parts_)
@@ -97,10 +97,10 @@ class GitManager:
                     begin_ = int(line_[0]) - 1
                     end_ = int(line_[0]) + int(line_[1]) - 1
                     for l in range(begin_, end_):
-                        ed.decor(DECOR_SET, line=l, tag=0, text='', color=DIFF_COLOR_)
+                        ed.decor(DECOR_SET, line=l, tag=l, text='', color=DIFF_COLOR_)
                 else:
                     line__ = int(line_) - 1
-                    ed.decor(DECOR_SET, line=line__, tag=0, text='', color=DIFF_COLOR_)
+                    ed.decor(DECOR_SET, line=line__, tag=line__, text='', color=DIFF_COLOR_)
 
         return output
 

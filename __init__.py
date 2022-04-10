@@ -167,6 +167,10 @@ class Command:
     def on_focus(self, ed_self):
         self.request_update(ed_self, 'on_focus')
 
+    def on_change_slow(self, ed_self):
+        print('>on_change_slow')
+        self.request_update(ed_self, 'on_change_slow')
+
     def on_state(self, ed_self, state):
         # to skip on_open() when loading session
         if state == APPSTATE_SESSION_LOAD_BEGIN: # started
