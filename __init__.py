@@ -53,6 +53,9 @@ class Command:
 
         statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index, tag=CELL_TAG)
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
+
+        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=True)
+
         return True
 
     def load_icon(self):
@@ -72,13 +75,11 @@ class Command:
 
     def load_ops(self):
 
-        self.cell_width = int(ini_read(fn_config, 'op', 'statusbar_cell_width', '150'))
         self.white_icon = ini_read(fn_config, 'op', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'op', 'git_program', 'git')
 
     def save_ops(self):
 
-        ini_write(fn_config, 'op', 'statusbar_cell_width', str(self.cell_width))
         ini_write(fn_config, 'op', 'white_icon', '1' if self.white_icon else '0')
         ini_write(fn_config, 'op', 'git_program', gitmanager.git)
 
@@ -151,8 +152,8 @@ class Command:
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_IMAGEINDEX, tag=CELL_TAG, value=icon)
 
         #show panel?
-        size = self.cell_width if badge else 0
-        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=size)
+        if not badge:
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=0)
 
 
     def on_tab_change(self, ed_self):
