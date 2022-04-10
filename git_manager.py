@@ -83,7 +83,7 @@ class GitManager:
         (exit_code, output) = self.run_git(["diff", "-U0", filename_])
         if exit_code != 0:
             return ''
-        ed.decor(DECOR_DELETE_BY_TAG)
+        ed.decor(DECOR_DELETE_BY_TAG, DIFF_TAG)
         parts = re.findall(r"@@ \-(.*) @@", output)
         lines_ = []
         for part in parts:
