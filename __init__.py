@@ -168,7 +168,6 @@ class Command:
         self.request_update(ed_self, 'on_focus')
 
     def on_change_slow(self, ed_self):
-        print('>on_change_slow')
         self.request_update(ed_self, 'on_change_slow')
 
     def on_state(self, ed_self, state):
