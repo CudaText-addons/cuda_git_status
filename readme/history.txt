@@ -1,3 +1,5 @@
+2022.04.10
++ added: changed Git lines are now marked on the gutter by a color mark (patch by @ildarkhasanshin)
 
 2022.04.05
 * change: get the branch info using Git key "rev-parse" (patch from @ildarkhasanshin)
