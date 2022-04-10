@@ -88,13 +88,13 @@ class GitManager:
         lines_ = []
         for part in parts:
             lines = part.split(' +', maxsplit=1)
-            for line in lines:
-                parts_ = line.split(',', maxsplit=1)
-                if len(parts_) == 2:
-                    if int(parts_[1]) != 0:
-                        lines_.append(parts_)
-                else:
-                    lines_.append(line)
+            line = lines[1]
+            parts_ = line.split(',', maxsplit=1)
+            if len(parts_) == 2 and isinstance(parts_, list):
+                if int(parts_[1]) != 0:
+                    lines_.append(parts_)
+            else:
+                lines_.append(line)
         if len(lines_) > 0:
             for line_ in lines_:
                 if len(line_) == 2 and isinstance(line_, list):
