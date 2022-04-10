@@ -3,7 +3,8 @@ import re
 import subprocess
 from cudatext import *
 
-DIFF_COLOR_ = 0x384C38
+d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
+MY_DECOR_COLOR = d['LightBG3']['color_back']
 
 class GitManager:
     def __init__(self):
@@ -97,10 +98,10 @@ class GitManager:
                     begin_ = int(line_[0]) - 1
                     end_ = int(line_[0]) + int(line_[1]) - 1
                     for l in range(begin_, end_):
-                        ed.decor(DECOR_SET, line=l, tag=l, text='', color=DIFF_COLOR_)
+                        ed.decor(DECOR_SET, line=l, tag=l, text='', color=MY_DECOR_COLOR)
                 else:
                     line__ = int(line_) - 1
-                    ed.decor(DECOR_SET, line=line__, tag=line__, text='', color=DIFF_COLOR_)
+                    ed.decor(DECOR_SET, line=line__, tag=line__, text='', color=MY_DECOR_COLOR)
 
         return output
 
