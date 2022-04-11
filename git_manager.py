@@ -1,7 +1,12 @@
 import os
 import re
 import subprocess
+from cudatext import *
 
+d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
+MY_DECOR_COLOR = d['LightBG3']['color_back']
+
+DIFF_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 
 class GitManager:
     def __init__(self):
@@ -74,10 +79,41 @@ class GitManager:
                 return (0,0)
         return (0,0)
 
+    def diff(self, filename_):
+        (exit_code, output) = self.run_git(["diff", "-U0", filename_])
+        if exit_code != 0:
+            return ''
+        ed.decor(DECOR_DELETE_BY_TAG, tag=DIFF_TAG)
+        parts = re.findall(r"@@ \-(.*) @@", output)
+        lines_ = []
+        for part in parts:
+            lines = part.split(' +', maxsplit=1)
+            line = lines[1]
+            parts_ = line.split(',', maxsplit=1)
+            if len(parts_) == 2 and isinstance(parts_, list):
+                if int(parts_[1]) != 0:
+                    lines_.append(parts_)
+            else:
+                lines_.append(line)
+        if len(lines_) > 0:
+            for line_ in lines_:
+                if len(line_) == 2 and isinstance(line_, list):
+                    begin_ = int(line_[0]) - 1
+                    end_ = int(line_[0]) + int(line_[1]) - 1
+                    for l in range(begin_, end_):
+                        ed.decor(DECOR_SET, line=l, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
+                else:
+                    line__ = int(line_) - 1
+                    ed.decor(DECOR_SET, line=line__, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
+
+        return output
+
     def badge(self, filename):
         self.filename = filename
         if not self.filename:
             return ""
+
+        self.diff(self.filename)
 
         branch = self.branch()
         if not branch:
