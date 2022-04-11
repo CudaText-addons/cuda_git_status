@@ -106,7 +106,7 @@ class GitManager:
                     line__ = int(line_) - 1
                     ed.decor(DECOR_SET, line=line__, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
 
-        return output
+        return lines_
 
     def badge(self, filename):
         self.filename = filename

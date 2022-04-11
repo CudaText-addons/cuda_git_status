@@ -15,3 +15,15 @@ section=commands
 caption=Git Status\Config
 method=open_config
 menu=o
+
+[item2]
+section=commands
+caption=Git Status\Next change
+method=next_change
+hotkey=Shift+Ctrl+Alt+Down
+
+[item3]
+section=commands
+caption=Git Status\Prev change
+method=prev_change
+hotkey=Shift+Ctrl+Alt+Up
