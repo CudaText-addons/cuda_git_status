@@ -1,6 +1,6 @@
 [info]
 title=Git Status
-desc=Shows Git information in statusbar: current branch name, clean state, etc.
+desc=Shows Git information in the statusbar: current branch name, clean state, etc. Also shows 'gutter decoration' for lines changed in the file.
 type=cudatext-plugin
 subdir=cuda_git_status
 homepage=https://github.com/CudaText-addons/cuda_git_status
@@ -8,7 +8,7 @@ api=1.0.420
 
 [item1]
 section=events
-events=on_open,on_save,on_focus,on_state,on_change_slow
+events=on_open,on_save,on_focus~,on_state~,on_change_slow~
 
 [item5]
 section=commands
