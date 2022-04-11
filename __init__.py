@@ -9,7 +9,7 @@ CELL_TAG_INFO = 20 #CudaText built-in value for last statusbar cell
 CELL_TAG = 100 #uniq value for all plugins adding cells via statusbar_proc()
 BAR_H = 'main'
 
-fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_git_status.ini')
+fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
 
 ### Threaded
 is_getting_badge = Event()
@@ -75,13 +75,13 @@ class Command:
 
     def load_ops(self):
 
-        self.white_icon = ini_read(fn_config, 'op', 'white_icon', '0') == '1'
-        gitmanager.git = ini_read(fn_config, 'op', 'git_program', 'git')
+        self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
+        gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
 
     def save_ops(self):
 
-        ini_write(fn_config, 'op', 'white_icon', '1' if self.white_icon else '0')
-        ini_write(fn_config, 'op', 'git_program', gitmanager.git)
+        ini_write(fn_config, 'git_status', 'white_icon', '1' if self.white_icon else '0')
+        ini_write(fn_config, 'git_status', 'git_program', gitmanager.git)
 
     def open_config(self):
 
