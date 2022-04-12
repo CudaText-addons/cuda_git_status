@@ -114,6 +114,8 @@ class GitManager:
         self.filename = filename
         if not self.filename:
             return ""
+        if not os.path.isfile(filename):
+            return ""
 
         self.diff(self.filename)
 
