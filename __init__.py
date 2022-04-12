@@ -3,6 +3,7 @@ from queue import Queue
 from threading import Thread, Event
 import time
 from cudatext import *
+from . import git_manager
 from .git_manager import GitManager
 
 CELL_TAG_INFO = 20 #CudaText built-in value for last statusbar cell
@@ -77,11 +78,17 @@ class Command:
 
         self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
+        self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
+
+        d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
+        if self.decor_style in d:
+            git_manager.MY_DECOR_COLOR = d[self.decor_style]['color_back']
 
     def save_ops(self):
 
         ini_write(fn_config, 'git_status', 'white_icon', '1' if self.white_icon else '0')
         ini_write(fn_config, 'git_status', 'git_program', gitmanager.git)
+        ini_write(fn_config, 'git_status', 'decor_style', self.decor_style)
 
     def open_config(self):
 
