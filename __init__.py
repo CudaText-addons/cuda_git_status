@@ -6,8 +6,8 @@ from cudatext import *
 from . import git_manager
 from .git_manager import GitManager
 
-CELL_TAG_INFO = 20 #CudaText built-in value for last statusbar cell
-CELL_TAG = 100 #uniq value for all plugins adding cells via statusbar_proc()
+CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
+CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 BAR_H = 'main'
 
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
@@ -47,7 +47,7 @@ class Command:
 
     def init_bar_cell(self):
 
-        #insert our cell before "info" cell
+        # insert our cell before "info" cell
         index = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG_INFO)
         if index is None:
             return False
