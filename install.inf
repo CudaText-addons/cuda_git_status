@@ -18,12 +18,10 @@ menu=o
 
 [item2]
 section=commands
-caption=Git Status\Next change
+caption=Git Status\Jump to next change
 method=next_change
-hotkey=Shift+Ctrl+Alt+Down
 
 [item3]
 section=commands
-caption=Git Status\Prev change
+caption=Git Status\'Jump to previous change
 method=prev_change
-hotkey=Shift+Ctrl+Alt+Up

@@ -200,12 +200,14 @@ class Command:
             for line_start_ in lines_start_:
                 if caret_y < line_start_:
                     ed.set_caret(0, line_start_ - 1)
-                    return
+                    break
 
     def prev_change(self):
         caret_y = self.get_caret_y()
         lines_start_ = self.get_lines_start()
         if len(lines_start_) > 0:
+            lines_start_.reverse()
             for line_start_ in lines_start_:
                 if caret_y > line_start_:
                     ed.set_caret(0, line_start_ - 1)
+                    break
