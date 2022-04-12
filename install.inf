@@ -23,5 +23,5 @@ method=next_change
 
 [item3]
 section=commands
-caption=Git Status\'Jump to previous change
+caption=Git Status\Jump to previous change
 method=prev_change
