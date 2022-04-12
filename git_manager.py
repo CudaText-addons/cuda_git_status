@@ -91,8 +91,7 @@ class GitManager:
             line = lines[1]
             parts_ = line.split(',', maxsplit=1)
             if len(parts_) == 2 and isinstance(parts_, list):
-                if int(parts_[1]) != 0:
-                    lines_.append(parts_)
+                lines_.append(parts_)
             else:
                 lines_.append(line)
         if len(lines_) > 0:
@@ -100,8 +99,11 @@ class GitManager:
                 if len(line_) == 2 and isinstance(line_, list):
                     begin_ = int(line_[0]) - 1
                     end_ = int(line_[0]) + int(line_[1]) - 1
-                    for l in range(begin_, end_):
-                        ed.decor(DECOR_SET, line=l, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
+                    if begin_ == end_:
+                        ed.decor(DECOR_SET, line=begin_, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
+                    else:
+                        for l in range(begin_, end_):
+                            ed.decor(DECOR_SET, line=l, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
                 else:
                     line__ = int(line_) - 1
                     ed.decor(DECOR_SET, line=line__, tag=DIFF_TAG, text='', color=MY_DECOR_COLOR)
