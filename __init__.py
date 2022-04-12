@@ -180,3 +180,34 @@ class Command:
             self.is_loading_sesh = False
             self.request_update(ed, 'session loaded')
 
+    def get_caret_y(self):
+        return ed.get_carets()[0][1] + 1
+
+    def get_lines_start(self):
+        parts_ = gitmanager.diff(ed.get_filename())
+        lines_start_ = []
+        for part_ in parts_:
+            if len(part_) == 2 and isinstance(part_, list):
+                lines_start_.append(int(part_[0]))
+            else:
+                lines_start_.append(int(part_))
+        return lines_start_
+
+    def next_change(self):
+        caret_y = self.get_caret_y()
+        lines_start_ = self.get_lines_start()
+        if len(lines_start_) > 0:
+            for line_start_ in lines_start_:
+                if caret_y < line_start_:
+                    ed.set_caret(0, line_start_ - 1)
+                    break
+
+    def prev_change(self):
+        caret_y = self.get_caret_y()
+        lines_start_ = self.get_lines_start()
+        if len(lines_start_) > 0:
+            lines_start_.reverse()
+            for line_start_ in lines_start_:
+                if caret_y > line_start_:
+                    ed.set_caret(0, line_start_ - 1)
+                    break

@@ -1,4 +1,7 @@
 2022.04.10
++ added: commands for jump to git-changes (patch by @ildarkhasanshin)
+
+2022.04.10
 * change: config file is now settings/plugins.ini (by Alexey)
 + added: changed Git lines are now marked on the gutter by a color mark (patch by @ildarkhasanshin)
 

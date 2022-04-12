@@ -15,3 +15,13 @@ section=commands
 caption=Git Status\Config
 method=open_config
 menu=o
+
+[item2]
+section=commands
+caption=Git Status\Jump to next change
+method=next_change
+
+[item3]
+section=commands
+caption=Git Status\'Jump to previous change
+method=prev_change
