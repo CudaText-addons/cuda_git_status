@@ -177,9 +177,9 @@ class Command:
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Checkout file'), command='cuda_git_status.checkout_file_')
         menu_proc(h, MENU_ADD, caption='-')
-        menu_proc(h, MENU_ADD, caption=_('Get Log-file'), command='cuda_git_status.get_log_file_')
-        menu_proc(h, MENU_ADD, caption=_('Get NotStaged-files'), command='cuda_git_status.get_notstaged_files_')
-        menu_proc(h, MENU_ADD, caption=_('Get UnTracked-files'), command='cuda_git_status.get_untracked_files_')
+        menu_proc(h, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
+        menu_proc(h, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+        menu_proc(h, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Commit'), command='cuda_git_status.commit_')
         menu_proc(h, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
@@ -274,21 +274,21 @@ class Command:
         if git_output_:
             self.get_memo_(git_output_, _('Git: Log of file'))
         else:
-            msg_status(_('Git: not log-file'))
+            msg_status(_('Git: no log-file'))
 
     def get_notstaged_files_(self):
         git_output_ = self.run_git_(["diff", "--name-only"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
         else:
-            msg_status(_('Git: not NotStaged-files'))
+            msg_status(_('Git: no not-staged files'))
 
     def get_untracked_files_(self):
         git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Untracked files'))
         else:
-            msg_status(_('Git: not UnTracked-files'))
+            msg_status(_('Git: no untracked files'))
 
     def commit_(self):
         txt_ = dlg_input('Git: Commit changes', '')
