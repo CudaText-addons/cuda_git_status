@@ -175,7 +175,7 @@ class Command:
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
         menu_proc(h, MENU_ADD, caption='-')
-        menu_proc(h, MENU_ADD, caption=_('Checkout file'), command='cuda_git_status.checkout_file_')
+        menu_proc(h, MENU_ADD, caption=_('Restore file'), command='cuda_git_status.restore_file_')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
         menu_proc(h, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
@@ -262,11 +262,13 @@ class Command:
         if git_output_:
             self.get_memo_(git_output_, _('Git: Status'))
 
-    def checkout_file_(self):
+    def restore_file_(self):
         filename_ = ed.get_filename()
-        res = msg_box(_("Do you really want to checkout this file?"), MB_YESNO+MB_ICONQUESTION)
+        res = msg_box(_("Do you really want to restore this file?"), MB_YESNO+MB_ICONQUESTION)
         if res == ID_YES:
-            self.run_git_(["checkout", filename_])
+            git_output_ = self.run_git_(["checkout", filename_])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Log of restore file'))
 
     def get_log_file_(self):
         filename_ = ed.get_filename()
