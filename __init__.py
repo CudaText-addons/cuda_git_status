@@ -182,6 +182,7 @@ class Command:
         menu_proc(h, MENU_ADD, caption=_('Get UnTracked-files'), command='cuda_git_status.get_untracked_files_')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Commit'), command='cuda_git_status.commit_')
+        menu_proc(h, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
         get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
         menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
@@ -290,8 +291,15 @@ class Command:
             msg_status(_('Git: not UnTracked-files'))
 
     def commit_(self):
-        txt_ = dlg_input('Git: commit changes', '')
+        txt_ = dlg_input('Git: Commit changes', '')
         if txt_:
             git_output_ = self.run_git_(["commit", "-m", txt_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Result of commit'))
+
+    def push_(self):
+        txt_ = dlg_input('Git: Push', 'origin master')
+        if txt_:
+            git_output_ = self.run_git_(["push", txt_])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Result of push'))
