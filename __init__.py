@@ -48,6 +48,8 @@ class Command:
         self.load_ops()
         self.load_icon()
 
+        self.h_menu = None
+
     def init_bar_cell(self):
 
         # insert our cell before "info" cell
@@ -168,10 +170,9 @@ class Command:
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
 
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
-        self.h_menu = menu_proc(0, MENU_CREATE)
-        menu_proc(self.h_menu, MENU_CLEAR)
+        if self.h_menu is None:
+            self.h_menu = menu_proc(0, MENU_CREATE)
 
-        menu_proc(self.h_menu, MENU_CLEAR)
         menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
         menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
         menu_proc(self.h_menu, MENU_ADD, caption='-')
