@@ -176,7 +176,10 @@ class Command:
         menu_proc(h, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Checkout file'), command='cuda_git_status.checkout_file_')
-        menu_proc(h, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.log_file_')
+        menu_proc(h, MENU_ADD, caption='-')
+        menu_proc(h, MENU_ADD, caption=_('Get Log-file'), command='cuda_git_status.get_log_file_')
+        menu_proc(h, MENU_ADD, caption=_('Get NotStaged-files'), command='cuda_git_status.get_notstaged_files_')
+        menu_proc(h, MENU_ADD, caption=_('Get UnTracked-files'), command='cuda_git_status.get_untracked_files_')
         get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
         menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
@@ -236,35 +239,50 @@ class Command:
                     ed.set_caret(0, line_start_ - 1)
                     break
 
-    def get_status_(self):
-        (exit_code, output) = gitmanager.run_git(["status"])
+    def run_git_(self, params_):
+        (exit_code, output) = gitmanager.run_git(params_)
         if exit_code != 0:
             return ''
-        output_ = output.replace("\n", "\r")
+        return output
+
+    def get_memo_(self, git_output_):
+        output_ = git_output_.replace("\n", "\r")
         c1 = chr(1)
         text_ = '\n'.join([]
             +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
             +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
         )
-        dlg_custom(_('Git status'), 620, 360, text_)
+        dlg_custom(_('Git: Log of file'), 620, 360, text_)
+
+    def get_status_(self):
+        git_output_ = self.run_git_(["status"])
+        if git_output_:
+            output_ = git_output_.replace("\n", "\r")
+            c1 = chr(1)
+            text_ = '\n'.join([]
+                +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
+                +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
+            )
+            dlg_custom(_('Git: Status'), 620, 360, text_)
 
     def checkout_file_(self):
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to checkout this file?"), MB_YESNO+MB_ICONQUESTION)
         if res == ID_YES:
-            (exit_code, output) = gitmanager.run_git(["checkout", filename_])
-            if exit_code != 0:
-                return ''
+            self.run_git_(["checkout", filename_])
 
-    def log_file_(self):
+    def get_log_file_(self):
         filename_ = ed.get_filename()
-        (exit_code, output) = gitmanager.run_git(["log", "-p", filename_])
-        if exit_code != 0:
-            return ''
-        output_ = output.replace("\n", "\r")
-        c1 = chr(1)
-        text_ = '\n'.join([]
-            +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
-            +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
-        )
-        dlg_custom(_('Git log file'), 620, 360, text_)
+        git_output_ = self.run_git_(["log", "-p", filename_])
+        if git_output_:
+            self.get_memo_(git_output_)
+
+    def get_notstaged_files_(self):
+        git_output_ = self.run_git_(["diff", "--name-only"])
+        if git_output_:
+            self.get_memo_(git_output_)
+
+    def get_untracked_files_(self):
+        git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        if git_output_:
+            self.get_memo_(git_output_)
