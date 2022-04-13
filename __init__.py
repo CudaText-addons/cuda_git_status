@@ -245,25 +245,19 @@ class Command:
             return ''
         return output
 
-    def get_memo_(self, git_output_):
+    def get_memo_(self, git_output_, caption_):
         output_ = git_output_.replace("\n", "\r")
         c1 = chr(1)
         text_ = '\n'.join([]
             +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
             +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
         )
-        dlg_custom(_('Git: Log of file'), 620, 360, text_)
+        dlg_custom(caption_, 620, 360, text_)
 
     def get_status_(self):
         git_output_ = self.run_git_(["status"])
         if git_output_:
-            output_ = git_output_.replace("\n", "\r")
-            c1 = chr(1)
-            text_ = '\n'.join([]
-                +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
-                +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
-            )
-            dlg_custom(_('Git: Status'), 620, 360, text_)
+            self.get_memo_(git_output_, _('Git: Status'))
 
     def checkout_file_(self):
         filename_ = ed.get_filename()
@@ -275,14 +269,14 @@ class Command:
         filename_ = ed.get_filename()
         git_output_ = self.run_git_(["log", "-p", filename_])
         if git_output_:
-            self.get_memo_(git_output_)
+            self.get_memo_(git_output_, _('Git: Log of file'))
 
     def get_notstaged_files_(self):
         git_output_ = self.run_git_(["diff", "--name-only"])
         if git_output_:
-            self.get_memo_(git_output_)
+            self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
 
     def get_untracked_files_(self):
         git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
         if git_output_:
-            self.get_memo_(git_output_)
+            self.get_memo_(git_output_, _('Git: Untracked files'))
