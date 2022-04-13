@@ -1,3 +1,7 @@
+
+2022.04.12
++ added: option "decor_style" (by Alexey)
+
 2022.04.10
 + added: commands for jump to git-changes (patch by @ildarkhasanshin)
 
