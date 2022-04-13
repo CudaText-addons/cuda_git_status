@@ -172,6 +172,8 @@ class Command:
         menu_proc(h, MENU_CLEAR)
         menu_proc(h, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
         menu_proc(h, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
+        menu_proc(h, MENU_ADD, caption='-')
+        menu_proc(h, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
         get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
         menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
@@ -230,3 +232,15 @@ class Command:
                 if caret_y > line_start_:
                     ed.set_caret(0, line_start_ - 1)
                     break
+
+    def get_status_(self):
+        (exit_code, output) = gitmanager.run_git(["status"])
+        if exit_code != 0:
+            return ''
+        output_ = output.replace("\n", "\r")
+        c1 = chr(1)
+        text_ = '\n'.join([]
+            +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
+            +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
+        )
+        dlg_custom(_('Git status'), 620, 360, text_)
