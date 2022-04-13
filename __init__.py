@@ -185,8 +185,7 @@ class Command:
         menu_proc(self.h_menu, MENU_ADD, caption='-')
         menu_proc(self.h_menu, MENU_ADD, caption=_('Commit'), command='cuda_git_status.commit_')
         menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
-        get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
-        menu_proc(self.h_menu, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
+        menu_proc(self.h_menu, MENU_SHOW)
 
     def on_tab_change(self, ed_self):
         self.request_update(ed_self, 'on_tab_change')
