@@ -172,20 +172,20 @@ class Command:
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if self.h_menu is None:
             self.h_menu = menu_proc(0, MENU_CREATE)
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
-        menu_proc(self.h_menu, MENU_ADD, caption='-')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-        menu_proc(self.h_menu, MENU_ADD, caption='-')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
-        menu_proc(self.h_menu, MENU_ADD, caption='-')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
-        menu_proc(self.h_menu, MENU_ADD, caption='-')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-        menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
         menu_proc(self.h_menu, MENU_SHOW)
 
     def on_tab_change(self, ed_self):
