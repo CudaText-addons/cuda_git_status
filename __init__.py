@@ -6,6 +6,9 @@ from cudatext import *
 from . import git_manager
 from .git_manager import GitManager
 
+from cudax_lib import get_translation
+_   = get_translation(__file__)  # I18N
+
 CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
 CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 BAR_H = 'main'
@@ -162,6 +165,15 @@ class Command:
         if not badge:
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=0)
 
+        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
+
+    def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
+        h = menu_proc(0, MENU_CREATE)
+        menu_proc(h, MENU_CLEAR)
+        menu_proc(h, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
+        menu_proc(h, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
+        get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
+        menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
     def on_tab_change(self, ed_self):
         self.request_update(ed_self, 'on_tab_change')
