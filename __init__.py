@@ -294,4 +294,4 @@ class Command:
         if txt_:
             git_output_ = self.run_git_(["commit", "-m", txt_])
             if git_output_:
-                msg_status(_('Git: commited ok'))
+                self.get_memo_(git_output_, _('Git: Result of commit'))
