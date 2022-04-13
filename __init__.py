@@ -174,6 +174,8 @@ class Command:
         menu_proc(h, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
+        menu_proc(h, MENU_ADD, caption='-')
+        menu_proc(h, MENU_ADD, caption=_('Checkout file'), command='cuda_git_status.checkout_file_')
         get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
         menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
@@ -244,3 +246,11 @@ class Command:
             +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
         )
         dlg_custom(_('Git status'), 620, 360, text_)
+
+    def checkout_file_(self):
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you really checkout this file?"), MB_YESNO+MB_ICONQUESTION)
+        if res == ID_YES:
+            (exit_code, output) = gitmanager.run_git(["checkout", filename_])
+            if exit_code != 0:
+                return ''
