@@ -249,7 +249,7 @@ class Command:
 
     def checkout_file_(self):
         filename_ = ed.get_filename()
-        res = msg_box(_("Do you really checkout this file?"), MB_YESNO+MB_ICONQUESTION)
+        res = msg_box(_("Do you really want to checkout this file?"), MB_YESNO+MB_ICONQUESTION)
         if res == ID_YES:
             (exit_code, output) = gitmanager.run_git(["checkout", filename_])
             if exit_code != 0:
