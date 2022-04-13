@@ -176,6 +176,7 @@ class Command:
         menu_proc(h, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
         menu_proc(h, MENU_ADD, caption='-')
         menu_proc(h, MENU_ADD, caption=_('Checkout file'), command='cuda_git_status.checkout_file_')
+        menu_proc(h, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.log_file_')
         get_mouse_coords = app_proc(PROC_GET_MOUSE_POS, '')
         menu_proc(h, MENU_SHOW, command=(get_mouse_coords[0], get_mouse_coords[1]))
 
@@ -254,3 +255,16 @@ class Command:
             (exit_code, output) = gitmanager.run_git(["checkout", filename_])
             if exit_code != 0:
                 return ''
+
+    def log_file_(self):
+        filename_ = ed.get_filename()
+        (exit_code, output) = gitmanager.run_git(["log", "-p", filename_])
+        if exit_code != 0:
+            return ''
+        output_ = output.replace("\n", "\r")
+        c1 = chr(1)
+        text_ = '\n'.join([]
+            +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310'])]
+            +[c1.join(['type=button', 'pos=10,320,100,0', 'cap='+_('&OK')])]
+        )
+        dlg_custom(_('Git log file'), 620, 360, text_)
