@@ -280,14 +280,14 @@ class Command:
         if git_output_:
             self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
         else:
-            msg_status(_('Git: not changes'))
+            msg_status(_('Git: not NotStaged-files'))
 
     def get_untracked_files_(self):
         git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Untracked files'))
         else:
-            msg_status(_('Git: not untracked-files'))
+            msg_status(_('Git: not UnTracked-files'))
 
     def commit_(self):
         txt_ = dlg_input('Git: commit changes', '')
