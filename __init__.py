@@ -191,7 +191,7 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get log'), command='cuda_git_status.get_log_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get log of file'), command='cuda_git_status.get_log_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_status    = menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
@@ -325,9 +325,8 @@ class Command:
                 self.get_memo_(git_output_, _('Git: Log of restore file'))
 
     def get_log_(self):
-        filename_ = ed.get_filename()
         git_output_ = self.run_git_([
-            'log', '--decorate=short', '--pretty=oneline',
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
         ])
 
         if git_output_:
@@ -338,13 +337,13 @@ class Command:
     def get_log_file_(self):
         filename_ = ed.get_filename()
         git_output_ = self.run_git_([
-            '--no-pager', 'log', '--decorate=short', '--pretty=oneline',
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
             filename_])
 
         if git_output_:
             self.get_memo_(git_output_, _('Git: Log of file'))
         else:
-            msg_status(_('Git: no log-file'))
+            msg_status(_('Git: no log of file'))
 
     def get_notstaged_files_(self):
         git_output_ = self.run_git_(["diff", "--name-only"])
