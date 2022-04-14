@@ -181,15 +181,35 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+
+            notstaged_files_ = self.run_git_(["diff", "--name-only"])
+            notstaged_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            if (notstaged_files_ == ''):
+                menu_proc(notstaged_id, MENU_SET_ENABLED, command=False)
+
+            untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+            untracked_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+            if (untracked_files_ == ''):
+                menu_proc(untracked_id, MENU_SET_ENABLED, command=False)
+
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            filename_ = (str(ed.get_filename()).split("/"))[-1]
+            add_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+            if filename_ not in notstaged_files_.split("\n") and filename_ not in untracked_files_.split("\n"):
+                menu_proc(add_id, MENU_SET_ENABLED, command=False)
+
+            restore_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            parts_ = gitmanager.diff(ed.get_filename())
+            if len(parts_) == 0:
+                menu_proc(restore_id, MENU_SET_ENABLED, command=False)
+
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            commit_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            if not gitmanager.is_dirty():
+                menu_proc(commit_id, MENU_SET_ENABLED, command=False)
+
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
         menu_proc(self.h_menu, MENU_SHOW)
