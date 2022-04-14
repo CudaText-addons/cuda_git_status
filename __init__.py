@@ -6,6 +6,9 @@ from cudatext import *
 from . import git_manager
 from .git_manager import GitManager
 
+from cudax_lib import get_translation
+_   = get_translation(__file__)  # I18N
+
 CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
 CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 BAR_H = 'main'
@@ -44,6 +47,8 @@ class Command:
 
         self.load_ops()
         self.load_icon()
+
+        self.h_menu = None
 
     def init_bar_cell(self):
 
@@ -162,6 +167,26 @@ class Command:
         if not badge:
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=0)
 
+        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
+
+    def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
+        if self.h_menu is None:
+            self.h_menu = menu_proc(0, MENU_CREATE)
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+
+        menu_proc(self.h_menu, MENU_SHOW)
 
     def on_tab_change(self, ed_self):
         self.request_update(ed_self, 'on_tab_change')
@@ -218,3 +243,67 @@ class Command:
                 if caret_y > line_start_:
                     ed.set_caret(0, line_start_ - 1)
                     break
+
+    def run_git_(self, params_):
+        (exit_code, output) = gitmanager.run_git(params_)
+        if exit_code != 0:
+            return ''
+        return output
+
+    def get_memo_(self, git_output_, caption_):
+        output_ = git_output_.replace("\n", "\r")
+        c1 = chr(1)
+        text_ = '\n'.join([]
+            +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310', 'ex0=1', 'ex1=1'])]
+            +[c1.join(['type=button', 'pos=520,320,610,0', 'cap='+_('&OK')])]
+        )
+        dlg_custom(caption_, 620, 360, text_)
+
+    def get_status_(self):
+        git_output_ = self.run_git_(["status"])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Status'))
+
+    def restore_file_(self):
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
+        if res == ID_YES:
+            git_output_ = self.run_git_(["restore", filename_])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Log of restore file'))
+
+    def get_log_file_(self):
+        filename_ = ed.get_filename()
+        git_output_ = self.run_git_(["log", "-p", filename_])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Log of file'))
+        else:
+            msg_status(_('Git: no log-file'))
+
+    def get_notstaged_files_(self):
+        git_output_ = self.run_git_(["diff", "--name-only"])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
+        else:
+            msg_status(_('Git: no not-staged files'))
+
+    def get_untracked_files_(self):
+        git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Untracked files'))
+        else:
+            msg_status(_('Git: no untracked files'))
+
+    def commit_(self):
+        txt_ = dlg_input('Git: Commit changes', '')
+        if txt_:
+            git_output_ = self.run_git_(["commit", "-m", txt_])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Result of commit'))
+
+    def push_(self):
+        txt_ = dlg_input('Git: Push', 'origin master')
+        if txt_:
+            git_output_ = self.run_git_(["push", txt_])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Result of push'))
