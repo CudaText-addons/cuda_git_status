@@ -177,6 +177,7 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
@@ -263,6 +264,13 @@ class Command:
         git_output_ = self.run_git_(["status"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Status'))
+
+    def add_file_(self):
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you really want to add this file?"), MB_OKCANCEL+MB_ICONQUESTION)
+        if res == ID_OK:
+            self.run_git_(["add", filename_])
+            msg_status(_('Git: file added'))
 
     def restore_file_(self):
         filename_ = ed.get_filename()
