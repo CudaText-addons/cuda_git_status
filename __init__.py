@@ -288,7 +288,7 @@ class Command:
     def get_log_(self):
         filename_ = ed.get_filename()
         git_output_ = self.run_git_([
-            'log', '--decorate=short', '--pretty=oneline',
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline'
         ])
 
         if git_output_:
