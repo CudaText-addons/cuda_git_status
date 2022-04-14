@@ -1,5 +1,6 @@
-2022.04.13
-+ add: click on the "Git status" statusbar cell shows the new menu with several commands (patch by @ildarkhasanshin)
+2022.04.14
++ add: more menu items in the statusbar click menu
++ add: click on the Git statusbar cell shows new menu with several commands (patches by @ildarkhasanshin and Alexey T.)
 
 2022.04.12
 + added: option "decor_style" (by Alexey)
