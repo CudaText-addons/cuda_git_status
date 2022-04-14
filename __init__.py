@@ -49,6 +49,11 @@ class Command:
         self.load_icon()
 
         self.h_menu = None
+        self.h_menu2 = None
+        self.h_menu3 = None
+        self.h_menu4 = None
+        self.h_menu5 = None
+        self.h_menu6 = None
 
     def init_bar_cell(self):
 
@@ -182,62 +187,43 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-            notstaged_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
-            untracked_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+
+            if self.h_menu2 is None:
+                self.h_menu2 = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+
+            if self.h_menu3 is None:
+                self.h_menu3 = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            add_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
-            restore_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            if self.h_menu4 is None:
+                self.h_menu4 = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+
+            if self.h_menu5 is None:
+                self.h_menu5 = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            commit_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            if self.h_menu6 is None:
+                self.h_menu6 = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
+        notstaged_files_ = self.run_git_(["diff", "--name-only"])
+        menu_proc(self.h_menu2, MENU_SET_ENABLED, command=False if notstaged_files_ == '' else True)
+
+        untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        menu_proc(self.h_menu3, MENU_SET_ENABLED, command=False if untracked_files_ == '' else True)
+
+        filename_ = (str(ed.get_filename()).split("/"))[-1]
+        enabled_ = False if filename_ not in notstaged_files_.split("\n") and filename_ not in untracked_files_.split("\n") else True
+        menu_proc(self.h_menu4, MENU_SET_ENABLED, command=enabled_)
+
+        parts_ = gitmanager.diff(ed.get_filename())
+        menu_proc(self.h_menu5, MENU_SET_ENABLED, command=False if len(parts_) == 0 else True)
+
+        menu_proc(self.h_menu6, MENU_SET_ENABLED, command=False if not gitmanager.is_dirty() else True)
+
         menu_proc(self.h_menu, MENU_SHOW)
-
-        try:
-            notstaged_id
-        except NameError:
-            notstaged_id = None
-        if notstaged_id is not None:
-            notstaged_files_ = self.run_git_(["diff", "--name-only"])
-            if (notstaged_files_ == ''):
-                menu_proc(notstaged_id, MENU_SET_ENABLED, command=False)
-
-        try:
-            untracked_id
-        except NameError:
-            untracked_id = None
-        if untracked_id is not None:
-            untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
-            if (untracked_files_ == ''):
-                menu_proc(untracked_id, MENU_SET_ENABLED, command=False)
-
-        try:
-            add_id
-        except NameError:
-            add_id = None
-        if add_id is not None:
-            filename_ = (str(ed.get_filename()).split("/"))[-1]
-            if filename_ not in notstaged_files_.split("\n") and filename_ not in untracked_files_.split("\n"):
-                menu_proc(add_id, MENU_SET_ENABLED, command=False)
-
-        try:
-            restore_id
-        except NameError:
-            restore_id = None
-        if restore_id is not None:
-            parts_ = gitmanager.diff(ed.get_filename())
-            if len(parts_) == 0:
-                menu_proc(restore_id, MENU_SET_ENABLED, command=False)
-
-        try:
-            commit_id
-        except NameError:
-            commit_id = None
-        if commit_id is not None:
-            if not gitmanager.is_dirty():
-                menu_proc(commit_id, MENU_SET_ENABLED, command=False)
 
     def on_tab_change(self, ed_self):
         self.request_update(ed_self, 'on_tab_change')
