@@ -1,13 +1,13 @@
 import os
+import time
 from queue import Queue
 from threading import Thread, Event
-import time
-from cudatext import *
 from . import git_manager
 from .git_manager import GitManager
 
+from cudatext import *
 from cudax_lib import get_translation
-_   = get_translation(__file__)  # I18N
+_ = get_translation(__file__)  # I18N
 
 CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
 CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
