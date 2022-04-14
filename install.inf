@@ -38,7 +38,7 @@ method=get_log_
 
 [item7]
 section=commands
-caption=Git Status\Get log file
+caption=Git Status\Get log of file
 method=get_log_file_
 
 [item8]
