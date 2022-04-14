@@ -97,6 +97,11 @@ class Command:
         self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
         self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
+        
+        global DLG_W
+        global DLG_H
+        DLG_W = int(ini_read(fn_config, 'git_status', 'dialog_w', str(DLG_W)))
+        DLG_H = int(ini_read(fn_config, 'git_status', 'dialog_h', str(DLG_H)))
 
         d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
         if self.decor_style in d:
@@ -107,6 +112,11 @@ class Command:
         ini_write(fn_config, 'git_status', 'white_icon', '1' if self.white_icon else '0')
         ini_write(fn_config, 'git_status', 'git_program', gitmanager.git)
         ini_write(fn_config, 'git_status', 'decor_style', self.decor_style)
+
+        global DLG_W
+        global DLG_H
+        ini_write(fn_config, 'git_status', 'dialog_w', str(DLG_W))
+        ini_write(fn_config, 'git_status', 'dialog_h', str(DLG_H))
 
     def open_config(self):
 
