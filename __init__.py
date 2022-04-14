@@ -20,6 +20,12 @@ is_getting_badge = Event()
 
 gitmanager = GitManager()
 
+def git_relative_path(fn):
+    dir = os.path.dirname(fn)
+    while dir and not os.path.isdir(dir+os.sep+'.git'):
+        dir = os.path.dirname(dir)
+    return os.path.relpath(fn, dir)
+
 def gitman_loop(q_fns, q_badges):
     while True:
         fn = q_fns.get()    # wait for request
@@ -203,13 +209,8 @@ class Command:
         menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
         menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(list_untracked))
 
-        # we need relative path of file, from the level of .git folder
         fn = ed.get_filename()
-        dir = os.path.dirname(fn)
-        while dir and not os.path.isdir(dir+os.sep+'.git'):
-            dir = os.path.dirname(dir)
-        fn_only = os.path.relpath(fn, dir)
-        #print('fn_only', fn_only)
+        fn_only = git_relative_path(fn)
 
         # 'add'
         en = fn_only in list_notstaged.splitlines() or fn_only in list_untracked.splitlines()
