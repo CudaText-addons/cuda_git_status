@@ -198,8 +198,9 @@ class Command:
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if self.h_menu is None:
             self.h_menu = menu_proc(0, MENU_CREATE)
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
+
+            self.h_menu_jump1 = menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
+            self.h_menu_jump2 = menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get log'), command='cuda_git_status.get_log_')
@@ -238,6 +239,8 @@ class Command:
         menu_proc(self.h_menu_add, MENU_SET_ENABLED, command=en)
 
         # 'restore'
+        menu_proc(self.h_menu_jump1, MENU_SET_ENABLED, command=diffs)
+        menu_proc(self.h_menu_jump2, MENU_SET_ENABLED, command=diffs)
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
