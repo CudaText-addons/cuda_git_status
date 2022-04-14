@@ -49,11 +49,6 @@ class Command:
         self.load_icon()
 
         self.h_menu = None
-        self.h_menu2 = None
-        self.h_menu3 = None
-        self.h_menu4 = None
-        self.h_menu5 = None
-        self.h_menu6 = None
 
     def init_bar_cell(self):
 
