@@ -1,4 +1,5 @@
 2022.04.14
++ add: options for 'status' dialog width/height
 + add: more menu items in the statusbar click menu
 + add: click on the Git statusbar cell shows new menu with several commands (patches by @ildarkhasanshin and Alexey T.)
 
