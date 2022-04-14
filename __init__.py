@@ -202,6 +202,10 @@ class Command:
             self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
+        celltext = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_TEXT, tag=CELL_TAG)
+        if not celltext:
+            return
+
         list_notstaged = self.run_git_(["diff", "--name-only"])
         list_untracked = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
 
