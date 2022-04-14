@@ -12,6 +12,8 @@ _   = get_translation(__file__)  # I18N
 CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
 CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 BAR_H = 'main'
+DLG_W = 700
+DLG_H = 400
 
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
 
@@ -296,16 +298,13 @@ class Command:
         return output
 
     def get_memo_(self, git_output_, caption_):
-        W = 700
-        H = 400
-        
         output_ = git_output_.replace("\n", "\r")
         c1 = chr(1)
         text_ = '\n'.join([]
-            +[c1.join(['type=memo', 'val='+output_, 'pos=%d,%d,%d,%d'%(6, 6, W-6, H-6*2-25), 'ex0=1', 'ex1=1'])]
-            +[c1.join(['type=button', 'pos=%d,%d,%d,0'%(W-100, H-6-25, W-6), 'ex0=1', 'cap='+_('&OK')])]
+            +[c1.join(['type=memo', 'val='+output_, 'pos=%d,%d,%d,%d'%(6, 6, DLG_W-6, DLG_H-6*2-25), 'ex0=1', 'ex1=1'])]
+            +[c1.join(['type=button', 'pos=%d,%d,%d,0'%(DLG_W-100, DLG_H-6-25, DLG_W-6), 'ex0=1', 'cap='+_('&OK')])]
         )
-        dlg_custom(caption_, W, H, text_, focused=1)
+        dlg_custom(caption_, DLG_W, DLG_H, text_, focused=1)
 
     def get_status_(self):
         git_output_ = self.run_git_(["status"])
