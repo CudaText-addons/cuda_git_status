@@ -175,6 +175,7 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get log'), command='cuda_git_status.get_log_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
@@ -279,6 +280,17 @@ class Command:
             git_output_ = self.run_git_(["restore", filename_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Log of restore file'))
+
+    def get_log_(self):
+        filename_ = ed.get_filename()
+        git_output_ = self.run_git_([
+            'log', '--decorate=short', '--pretty=oneline',
+        ])
+
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Log'))
+        else:
+            msg_status(_('Git: no log'))
 
     def get_log_file_(self):
         filename_ = ed.get_filename()
