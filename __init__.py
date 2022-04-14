@@ -196,17 +196,17 @@ class Command:
             self.h_menu_commit = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
-        notstaged_files_ = self.run_git_(["diff", "--name-only"])
-        untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        list_notstaged = self.run_git_(["diff", "--name-only"])
+        list_untracked = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
 
         # 'not-staged', 'untracked'
-        menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(notstaged_files_))
-        menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(untracked_files_))
+        menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
+        menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(list_untracked))
 
         # 'add'
         fn = ed.get_filename()
         fn_only = os.path.basename(fn)
-        en = fn_only in notstaged_files_.splitlines() or fn_only in untracked_files_.splitlines()
+        en = fn_only in list_notstaged.splitlines() or fn_only in list_untracked.splitlines()
         menu_proc(self.h_menu_add, MENU_SET_ENABLED, command=en)
 
         # 'restore'
