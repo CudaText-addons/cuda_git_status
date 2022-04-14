@@ -21,7 +21,7 @@ is_getting_badge = Event()
 gitmanager = GitManager()
 
 def is_dir_root(s):
-	return s==os.sep or s.endswith(':\\')
+	return s==os.sep or s.endswith(':') or s.endswith(':\\')
 
 def git_relative_path(fn):
     dir = os.path.dirname(fn)
