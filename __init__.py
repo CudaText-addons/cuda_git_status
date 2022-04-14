@@ -296,13 +296,16 @@ class Command:
         return output
 
     def get_memo_(self, git_output_, caption_):
+        W = 700
+        H = 400
+        
         output_ = git_output_.replace("\n", "\r")
         c1 = chr(1)
         text_ = '\n'.join([]
-            +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,670,310', 'ex0=1', 'ex1=1'])]
-            +[c1.join(['type=button', 'pos=570,320,670,0', 'ex0=1', 'cap='+_('&OK')])]
+            +[c1.join(['type=memo', 'val='+output_, 'pos=%d,%d,%d,%d'%(6, 6, W-6, H-6*2-25), 'ex0=1', 'ex1=1'])]
+            +[c1.join(['type=button', 'pos=%d,%d,%d,0'%(W-100, H-6-25, W-6), 'ex0=1', 'cap='+_('&OK')])]
         )
-        dlg_custom(caption_, 680, 360, text_, focused=1)
+        dlg_custom(caption_, W, H, text_, focused=1)
 
     def get_status_(self):
         git_output_ = self.run_git_(["status"])
