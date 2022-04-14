@@ -192,11 +192,8 @@ class Command:
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
 
-            if self.h_menu2 is None:
-                self.h_menu2 = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
-
-            if self.h_menu3 is None:
-                self.h_menu3 = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+            self.h_menu_notstaged = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            self.h_menu_untracked = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
 
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
@@ -207,9 +204,12 @@ class Command:
             self.h_menu_commit = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
-        # update enabled-states of items
         notstaged_files_ = self.run_git_(["diff", "--name-only"])
         untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+
+        # 'not-staged', 'untracked'
+        menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(notstaged_files_))
+        menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(untracked_files_))
 
         # 'add'
         fn = ed.get_filename()
