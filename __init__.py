@@ -170,6 +170,7 @@ class Command:
             return
 
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=badge)
+        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=bool(badge))
 
         #show icon?
         icon = self.icon_index if badge else -1
