@@ -16,77 +16,77 @@ caption=Git Status\Config
 method=open_config
 menu=o
 
-[item3]
+[item10]
 section=commands
 caption=Git Status\Jump to next change
 method=next_change
 
-[item4]
+[item11]
 section=commands
 caption=Git Status\Jump to previous change
 method=prev_change
-
-[item5]
-section=commands
-caption=Git Status\-
-method=_
-
-[item6]
-section=commands
-caption=Git Status\Get log
-method=get_log_
-
-[item7]
-section=commands
-caption=Git Status\Get log of file
-method=get_log_file_
-
-[item8]
-section=commands
-caption=Git Status\-
-method=_
-
-[item9]
-section=commands
-caption=Git Status\Get status
-method=get_status_
-
-[item10]
-section=commands
-caption=Git Status\Get not-staged files
-method=get_notstaged_files_
-
-[item11]
-section=commands
-caption=Git Status\Get untracked files
-method=get_untracked_files_
 
 [item12]
 section=commands
 caption=Git Status\-
 method=_
 
-[item13]
+[item20]
 section=commands
-caption=Git Status\Add file...
-method=add_file_
+caption=Git Status\Get log
+method=get_log_
 
-[item14]
+[item21]
 section=commands
-caption=Git Status\Restore file...
-method=restore_file_
+caption=Git Status\Get log of file
+method=get_log_file_
 
-[item15]
+[item22]
 section=commands
 caption=Git Status\-
 method=_
 
-[item16]
+[item30]
+section=commands
+caption=Git Status\Get status
+method=get_status_
+
+[item31]
+section=commands
+caption=Git Status\Get not-staged files
+method=get_notstaged_files_
+
+[item32]
+section=commands
+caption=Git Status\Get untracked files
+method=get_untracked_files_
+
+[item33]
+section=commands
+caption=Git Status\-
+method=_
+
+[item40]
+section=commands
+caption=Git Status\Add file...
+method=add_file_
+
+[item41]
+section=commands
+caption=Git Status\Restore file...
+method=restore_file_
+
+[item42]
+section=commands
+caption=Git Status\-
+method=_
+
+[item50]
 section=commands
 caption=Git Status\Commit...
 method=commit_
 
-[item17]
+[item51]
 section=commands
 caption=Git Status\Push
 method=push_
