@@ -189,12 +189,29 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            self.h_menu_add = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+            self.h_menu_restore = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            self.h_menu_commit = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+
+        # update enabled-states of items
+        notstaged_files_ = self.run_git_(["diff", "--name-only"])
+        untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+
+        # 'add'
+        fn = ed.get_filename()
+        fn_only = os.path.basename(fn)
+        en = fn_only in notstaged_files_.splitlines() or fn_only in untracked_files_.splitlines()
+        menu_proc(self.h_menu_add, MENU_SET_ENABLED, command=en)
+
+        # 'restore'
+        parts_ = gitmanager.diff(fn)
+        menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=bool(parts_))
+
+        # 'commit'
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=gitmanager.is_dirty())
 
         menu_proc(self.h_menu, MENU_SHOW)
 
