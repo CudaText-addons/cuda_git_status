@@ -14,5 +14,7 @@ authors:
 - Alexey Torgashin (CudaText)
 - David Emanuel Santiago (@demanuel at GitHub)
 - Shovel (@halfbrained at GitHub)
+- Ildar Khasanshin (@ildarkhasanshin at GitHub)
+
 license: MIT
 icon from GitHub, license: MIT
