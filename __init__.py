@@ -200,32 +200,29 @@ class Command:
 
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            if self.h_menu4 is None:
-                self.h_menu4 = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
-
-            if self.h_menu5 is None:
-                self.h_menu5 = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
-
+            self.h_menu_add = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+            self.h_menu_restore = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            if self.h_menu6 is None:
-                self.h_menu6 = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            self.h_menu_commit = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
+        # update enabled-states of items
         notstaged_files_ = self.run_git_(["diff", "--name-only"])
-        menu_proc(self.h_menu2, MENU_SET_ENABLED, command=False if notstaged_files_ == '' else True)
-
         untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
-        menu_proc(self.h_menu3, MENU_SET_ENABLED, command=False if untracked_files_ == '' else True)
 
-        filename_ = (str(ed.get_filename()).split("/"))[-1]
-        enabled_ = False if filename_ not in notstaged_files_.split("\n") and filename_ not in untracked_files_.split("\n") else True
-        menu_proc(self.h_menu4, MENU_SET_ENABLED, command=enabled_)
+        # 'add'
+        fn = ed.get_filename()
+        fn_only = os.path.basename(fn)
+        en = fn_only in notstaged_files_.splitlines() or fn_only in untracked_files_.splitlines()
+        menu_proc(self.h_menu_add, MENU_SET_ENABLED, command=en)
 
-        parts_ = gitmanager.diff(ed.get_filename())
-        menu_proc(self.h_menu5, MENU_SET_ENABLED, command=False if len(parts_) == 0 else True)
+        # 'restore'
+        parts_ = gitmanager.diff(fn)
+        menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=bool(parts_))
 
-        menu_proc(self.h_menu6, MENU_SET_ENABLED, command=False if not gitmanager.is_dirty() else True)
+        # 'commit'
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=gitmanager.is_dirty())
 
         menu_proc(self.h_menu, MENU_SHOW)
 
