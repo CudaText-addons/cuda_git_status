@@ -274,7 +274,10 @@ class Command:
 
     def get_log_file_(self):
         filename_ = ed.get_filename()
-        git_output_ = self.run_git_(["log", "-p", filename_])
+        git_output_ = self.run_git_([
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline',
+            filename_])
+
         if git_output_:
             self.get_memo_(git_output_, _('Git: Log of file'))
         else:
