@@ -175,16 +175,20 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
+
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get log'), command='cuda_git_status.get_log_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get log file'), command='cuda_git_status.get_log_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
             menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
