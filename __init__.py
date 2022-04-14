@@ -267,7 +267,7 @@ class Command:
     def restore_file_(self):
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
-        if res == ID_YES:
+        if res == ID_OK:
             git_output_ = self.run_git_(["restore", filename_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Log of restore file'))
