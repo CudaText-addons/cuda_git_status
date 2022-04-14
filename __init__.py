@@ -31,7 +31,7 @@ def gitman_loop(q_fns, q_badges):
             #return
 
         _badge = gitmanager.badge(fn)
-        q_badges.put(_badge)
+        q_badges.put((fn, _badge))
         is_getting_badge.clear()
 #end Threaded
 
@@ -141,8 +141,8 @@ class Command:
         """
 
         if not self.badge_results.empty(): # have new badge
-            _badge = self.badge_results.get()
-            self.update(_badge)
+            _fn, _badge = self.badge_results.get()
+            self.update(_fn, _badge)
 
         # stop
         if self.badge_requests.empty() \
@@ -150,12 +150,16 @@ class Command:
                 and not is_getting_badge.is_set():
             timer_proc(TIMER_STOP, self.on_timer, 0)
 
-    def update(self, badge):
+    def update(self, fn, badge):
 
         if not self.init_bar_cell():
             #print('[Git Status] Statusbar not ready, '+reason)
             return
         #print('[Git Status] Statusbar ready, '+reason)
+
+        # received answer for different filename?
+        if fn != ed.get_filename():
+            return
 
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=badge)
 
