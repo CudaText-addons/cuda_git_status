@@ -195,6 +195,10 @@ class Command:
         if not badge:
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=0)
 
+    def is_git(self):
+        s = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_TEXT, tag=CELL_TAG)
+        return bool(s)        
+
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if self.h_menu is None:
             self.h_menu = menu_proc(0, MENU_CREATE)
@@ -219,8 +223,7 @@ class Command:
             self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
 
-        celltext = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_TEXT, tag=CELL_TAG)
-        if not celltext:
+        if not self.is_git():
             return
 
         fn = ed.get_filename()
