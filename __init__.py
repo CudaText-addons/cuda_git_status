@@ -291,21 +291,25 @@ class Command:
     def next_change(self):
         caret_y = self.get_caret_y()
         lines_start_ = self.get_lines_start()
-        if len(lines_start_) > 0:
+        if lines_start_:
             for line_start_ in lines_start_:
                 if caret_y < line_start_:
                     ed.set_caret(0, line_start_ - 1)
                     break
+        else:
+            msg_status(_('No Git changes'))
 
     def prev_change(self):
         caret_y = self.get_caret_y()
         lines_start_ = self.get_lines_start()
-        if len(lines_start_) > 0:
+        if lines_start_:
             lines_start_.reverse()
             for line_start_ in lines_start_:
                 if caret_y > line_start_:
                     ed.set_caret(0, line_start_ - 1)
                     break
+        else:
+            msg_status(_('No Git changes'))
 
     def run_git(self, params_):
         (exit_code, output) = gitmanager.run_git(params_)
@@ -378,6 +382,9 @@ class Command:
             msg_status(_('Git: no untracked files'))
 
     def commit_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
         txt_ = dlg_input('Git: Commit changes', '')
         if txt_:
             git_output_ = self.run_git(["commit", "-m", txt_])
@@ -386,7 +393,9 @@ class Command:
             self.request_update(ed, 'commited')
 
     def push_(self):
-        # seems we don't need any text for 'push'
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
         git_output_ = self.run_git(["push"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Result of push'))
