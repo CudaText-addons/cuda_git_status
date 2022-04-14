@@ -331,10 +331,11 @@ class Command:
             git_output_ = self.run_git_(["commit", "-m", txt_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Result of commit'))
+            self.request_update(ed, 'commited')
 
     def push_(self):
-        txt_ = dlg_input('Git: Push', 'origin master')
-        if txt_:
-            git_output_ = self.run_git_(["push", txt_])
-            if git_output_:
-                self.get_memo_(git_output_, _('Git: Result of push'))
+        # seems we don't need any text for 'push'
+        git_output_ = self.run_git_(["push"])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Result of push'))
+        self.request_update(ed, 'pushed')
