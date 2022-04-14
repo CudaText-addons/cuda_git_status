@@ -332,6 +332,9 @@ class Command:
             self.get_memo_(git_output_, _('Git: Status'))
 
     def add_file_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to add this file?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
@@ -339,6 +342,9 @@ class Command:
             msg_status(_('Git: file added'))
 
     def restore_file_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
