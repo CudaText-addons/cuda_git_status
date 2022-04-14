@@ -222,6 +222,10 @@ class Command:
         if not celltext:
             return
 
+        fn = ed.get_filename()
+        fn_rel = git_relative_path(fn)
+        diffs = bool(gitmanager.diff(fn))
+        dirty = gitmanager.is_dirty()        
         list_notstaged = self.run_git_(["diff", "--name-only"])
         list_untracked = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -229,19 +233,15 @@ class Command:
         menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
         menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(list_untracked))
 
-        fn = ed.get_filename()
-        fn_only = git_relative_path(fn)
-
         # 'add'
-        en = fn_only in list_notstaged.splitlines() or fn_only in list_untracked.splitlines()
+        en = fn_rel in list_notstaged.splitlines() or fn_rel in list_untracked.splitlines()
         menu_proc(self.h_menu_add, MENU_SET_ENABLED, command=en)
 
         # 'restore'
-        parts_ = gitmanager.diff(fn)
-        menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=bool(parts_))
+        menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
-        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=gitmanager.is_dirty())
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=dirty)
 
         menu_proc(self.h_menu, MENU_SHOW)
 
