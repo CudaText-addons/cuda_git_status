@@ -82,7 +82,9 @@ class GitManager:
         return (0,0)
 
     def diff(self, filename_):
-        (exit_code, output) = self.run_git(["diff", "-U0", filename_])
+        if filename_ != ed.get_filename():
+            return
+        exit_code, output = self.run_git(["diff", "-U0", filename_])
         if exit_code != 0:
             return ''
         ed.decor(DECOR_DELETE_BY_TAG, tag=DIFF_TAG)
@@ -96,7 +98,7 @@ class GitManager:
                 lines_.append(parts_)
             else:
                 lines_.append(line)
-        if len(lines_) > 0:
+        if lines_:
             for line_ in lines_:
                 if len(line_) == 2 and isinstance(line_, list):
                     begin_ = int(line_[0]) - 1
