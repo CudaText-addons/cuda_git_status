@@ -31,7 +31,7 @@ def gitman_loop(q_fns, q_badges):
             #return
 
         _badge = gitmanager.badge(fn)
-        q_badges.put(_badge)
+        q_badges.put((fn, _badge))
         is_getting_badge.clear()
 #end Threaded
 
@@ -62,10 +62,12 @@ class Command:
         if index is None:
             return False
 
-        statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index, tag=CELL_TAG)
-        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
-
-        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=True)
+        index_new = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG)
+        if index_new is None:
+            statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index, tag=CELL_TAG)
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=True)
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
 
         return True
 
@@ -146,8 +148,8 @@ class Command:
         """
 
         if not self.badge_results.empty(): # have new badge
-            _badge = self.badge_results.get()
-            self.update(_badge)
+            _fn, _badge = self.badge_results.get()
+            self.update(_fn, _badge)
 
         # stop
         if self.badge_requests.empty() \
@@ -155,12 +157,16 @@ class Command:
                 and not is_getting_badge.is_set():
             timer_proc(TIMER_STOP, self.on_timer, 0)
 
-    def update(self, badge):
+    def update(self, fn, badge):
 
         if not self.init_bar_cell():
             #print('[Git Status] Statusbar not ready, '+reason)
             return
         #print('[Git Status] Statusbar ready, '+reason)
+
+        # received answer for different filename?
+        if fn != ed.get_filename():
+            return
 
         statusbar_proc(BAR_H, STATUSBAR_SET_CELL_TEXT, tag=CELL_TAG, value=badge)
 
@@ -171,8 +177,6 @@ class Command:
         #show panel?
         if not badge:
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_SIZE, tag=CELL_TAG, value=0)
-
-        statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
 
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if self.h_menu is None:
@@ -358,10 +362,11 @@ class Command:
             git_output_ = self.run_git_(["commit", "-m", txt_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Result of commit'))
+            self.request_update(ed, 'commited')
 
     def push_(self):
-        txt_ = dlg_input('Git: Push', 'origin master')
-        if txt_:
-            git_output_ = self.run_git_(["push", txt_])
-            if git_output_:
-                self.get_memo_(git_output_, _('Git: Result of push'))
+        # seems we don't need any text for 'push'
+        git_output_ = self.run_git_(["push"])
+        if git_output_:
+            self.get_memo_(git_output_, _('Git: Result of push'))
+        self.request_update(ed, 'pushed')
