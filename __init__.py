@@ -172,6 +172,7 @@ class Command:
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if self.h_menu is None:
             self.h_menu = menu_proc(0, MENU_CREATE)
+
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to next change'), command='cuda_git_status.next_change')
             menu_proc(self.h_menu, MENU_ADD, caption=_('Jump to previous change'), command='cuda_git_status.prev_change')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
@@ -181,38 +182,62 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-
-            notstaged_files_ = self.run_git_(["diff", "--name-only"])
             notstaged_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            untracked_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            add_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
+            restore_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            commit_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+
+        menu_proc(self.h_menu, MENU_SHOW)
+
+        try:
+            notstaged_id
+        except NameError:
+            notstaged_id = None
+        if notstaged_id is not None:
+            notstaged_files_ = self.run_git_(["diff", "--name-only"])
             if (notstaged_files_ == ''):
                 menu_proc(notstaged_id, MENU_SET_ENABLED, command=False)
 
+        try:
+            untracked_id
+        except NameError:
+            untracked_id = None
+        if untracked_id is not None:
             untracked_files_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
-            untracked_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
             if (untracked_files_ == ''):
                 menu_proc(untracked_id, MENU_SET_ENABLED, command=False)
 
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
-
+        try:
+            add_id
+        except NameError:
+            add_id = None
+        if add_id is not None:
             filename_ = (str(ed.get_filename()).split("/"))[-1]
-            add_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
             if filename_ not in notstaged_files_.split("\n") and filename_ not in untracked_files_.split("\n"):
                 menu_proc(add_id, MENU_SET_ENABLED, command=False)
 
-            restore_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
+        try:
+            restore_id
+        except NameError:
+            restore_id = None
+        if restore_id is not None:
             parts_ = gitmanager.diff(ed.get_filename())
             if len(parts_) == 0:
                 menu_proc(restore_id, MENU_SET_ENABLED, command=False)
 
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
-
-            commit_id = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+        try:
+            commit_id
+        except NameError:
+            commit_id = None
+        if commit_id is not None:
             if not gitmanager.is_dirty():
                 menu_proc(commit_id, MENU_SET_ENABLED, command=False)
-
-            menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
-
-        menu_proc(self.h_menu, MENU_SHOW)
 
     def on_tab_change(self, ed_self):
         self.request_update(ed_self, 'on_tab_change')
