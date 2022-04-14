@@ -29,7 +29,7 @@ def git_relative_path(fn):
     dir = os.path.dirname(fn)
     while dir and not is_dir_root(dir) and not os.path.isdir(dir+os.sep+'.git'):
         dir = os.path.dirname(dir)
-    return os.path.relpath(fn, dir) if dir else ''
+    return os.path.relpath(fn, dir) if dir and not is_dir_root(dir) else ''
     
 def gitman_loop(q_fns, q_badges):
     while True:
