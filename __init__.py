@@ -230,8 +230,8 @@ class Command:
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()        
-        list_notstaged = self.run_git_(["diff", "--name-only"])
-        list_untracked = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        list_notstaged = self.run_git(["diff", "--name-only"])
+        list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
         # 'not-staged', 'untracked'
         menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
@@ -307,7 +307,7 @@ class Command:
                     ed.set_caret(0, line_start_ - 1)
                     break
 
-    def run_git_(self, params_):
+    def run_git(self, params_):
         (exit_code, output) = gitmanager.run_git(params_)
         if exit_code != 0:
             return ''
@@ -323,7 +323,7 @@ class Command:
         dlg_custom(caption_, DLG_W, DLG_H, text_, focused=1)
 
     def get_status_(self):
-        git_output_ = self.run_git_(["status"])
+        git_output_ = self.run_git(["status"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Status'))
 
@@ -331,19 +331,19 @@ class Command:
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to add this file?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
-            self.run_git_(["add", filename_])
+            self.run_git(["add", filename_])
             msg_status(_('Git: file added'))
 
     def restore_file_(self):
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
-            git_output_ = self.run_git_(["restore", filename_])
+            git_output_ = self.run_git(["restore", filename_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Log of restore file'))
 
     def get_log_(self):
-        git_output_ = self.run_git_([
+        git_output_ = self.run_git([
             '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
         ])
 
@@ -354,7 +354,7 @@ class Command:
 
     def get_log_file_(self):
         filename_ = ed.get_filename()
-        git_output_ = self.run_git_([
+        git_output_ = self.run_git([
             '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
             filename_])
 
@@ -364,14 +364,14 @@ class Command:
             msg_status(_('Git: no log of file'))
 
     def get_notstaged_files_(self):
-        git_output_ = self.run_git_(["diff", "--name-only"])
+        git_output_ = self.run_git(["diff", "--name-only"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
         else:
             msg_status(_('Git: no not-staged files'))
 
     def get_untracked_files_(self):
-        git_output_ = self.run_git_(["ls-files", ".", "--exclude-standard", "--others"])
+        git_output_ = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Untracked files'))
         else:
@@ -380,14 +380,14 @@ class Command:
     def commit_(self):
         txt_ = dlg_input('Git: Commit changes', '')
         if txt_:
-            git_output_ = self.run_git_(["commit", "-m", txt_])
+            git_output_ = self.run_git(["commit", "-m", txt_])
             if git_output_:
                 self.get_memo_(git_output_, _('Git: Result of commit'))
             self.request_update(ed, 'commited')
 
     def push_(self):
         # seems we don't need any text for 'push'
-        git_output_ = self.run_git_(["push"])
+        git_output_ = self.run_git(["push"])
         if git_output_:
             self.get_memo_(git_output_, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
