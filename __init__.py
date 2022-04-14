@@ -156,7 +156,7 @@ class Command:
 
         self.badge_requests.put(_filename)
 
-        timer_proc(TIMER_START, self.on_timer, 50)
+        timer_proc(TIMER_START, 'cuda_git_status.on_timer', 150)
 
     def on_timer(self, tag='', info=''):
         """ * check if thread returned new badge
@@ -171,7 +171,7 @@ class Command:
         if self.badge_requests.empty() \
                 and self.badge_results.empty() \
                 and not is_getting_badge.is_set():
-            timer_proc(TIMER_STOP, self.on_timer, 0)
+            timer_proc(TIMER_STOP, 'cuda_git_status.on_timer', 0)
 
     def update(self, fn, badge):
 
