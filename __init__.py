@@ -20,12 +20,15 @@ is_getting_badge = Event()
 
 gitmanager = GitManager()
 
+def is_dir_root(s):
+	return s==os.sep or s.endswith(':\\')
+
 def git_relative_path(fn):
     dir = os.path.dirname(fn)
-    while dir and not os.path.isdir(dir+os.sep+'.git'):
+    while dir and not is_dir_root(dir) and not os.path.isdir(dir+os.sep+'.git'):
         dir = os.path.dirname(dir)
-    return os.path.relpath(fn, dir)
-
+    return os.path.relpath(fn, dir) if dir else ''
+    
 def gitman_loop(q_fns, q_badges):
     while True:
         fn = q_fns.get()    # wait for request
