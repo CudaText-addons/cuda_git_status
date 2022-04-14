@@ -291,7 +291,7 @@ class Command:
         c1 = chr(1)
         text_ = '\n'.join([]
             +[c1.join(['type=memo', 'val='+output_, 'pos=10,10,610,310', 'ex0=1', 'ex1=1'])]
-            +[c1.join(['type=button', 'pos=520,320,610,0', 'cap='+_('&OK')])]
+            +[c1.join(['type=button', 'pos=520,320,610,0', 'ex0=1', 'cap='+_('&OK')])]
         )
         dlg_custom(caption_, 620, 360, text_)
 
