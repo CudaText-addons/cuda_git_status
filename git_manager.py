@@ -57,7 +57,8 @@ class GitManager:
         #(exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
         (exit_code, output) = self.run_git(["status", "-s"])
 
-        return exit_code == 1
+        #return exit_code == 1
+        return exit_code == 0
 
     def unpushed_info__old(self, branch):
         a, b = 0, 0
