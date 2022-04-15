@@ -406,7 +406,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        res = dlg_input(_("Run 'git push' with parameters:"), 'origin master')
+        res = dlg_input(_("Run 'git push' with parameters:"), '') # 'origin master')
         if not res:
             return
             
