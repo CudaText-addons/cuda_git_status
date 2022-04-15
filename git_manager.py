@@ -54,11 +54,13 @@ class GitManager:
             return ''
 
     def is_dirty(self):
-        #(exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
-        (exit_code, output) = self.run_git(["status", "-s"])
+        (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
+        return exit_code == 1
 
-        #return exit_code == 1
-        return bool(output)
+    ### This code shows dirty state when we have untacked files, bad.
+    #def is_dirty(self):
+    #    (exit_code, output) = self.run_git(["status", "-s"])
+    #    return bool(output)
 
     def unpushed_info__old(self, branch):
         a, b = 0, 0
