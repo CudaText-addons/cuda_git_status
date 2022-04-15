@@ -233,11 +233,7 @@ class Command:
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
-        list_staged    = self.run_git(["diff", "--staged"])
-        print('>')
-        print(list_staged)
-        print(bool(list_staged))
-        print('<')
+        list_staged    = bool(self.run_git(["diff", "--name-only", "--staged"]))
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -255,7 +251,7 @@ class Command:
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
-        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=dirty)
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=(dirty and list_staged))
 
         menu_proc(self.h_menu, MENU_SHOW)
 
