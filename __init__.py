@@ -30,7 +30,7 @@ def git_relative_path(fn):
     while dir and not is_dir_root(dir) and not os.path.isdir(dir+os.sep+'.git'):
         dir = os.path.dirname(dir)
     return os.path.relpath(fn, dir) if dir and not is_dir_root(dir) else ''
-    
+
 def gitman_loop(q_fns, q_badges):
     while True:
         fn = q_fns.get()    # wait for request
@@ -97,7 +97,7 @@ class Command:
         self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
         self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
-        
+
         global DLG_W
         global DLG_H
         DLG_W = int(ini_read(fn_config, 'git_status', 'dialog_w', str(DLG_W)))
@@ -197,7 +197,7 @@ class Command:
 
     def is_git(self):
         s = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_TEXT, tag=CELL_TAG)
-        return bool(s)        
+        return bool(s)
 
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if not self.is_git():
@@ -224,12 +224,16 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-            self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+            self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull...'), command='cuda_git_status.pull_')
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
-        dirty = gitmanager.is_dirty()        
+        dirty = gitmanager.is_dirty()
+        list_staged    = bool(self.run_git(["diff", "--name-only", "--staged"]))
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -247,7 +251,7 @@ class Command:
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
-        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=dirty)
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=(dirty and list_staged))
 
         menu_proc(self.h_menu, MENU_SHOW)
 
@@ -358,7 +362,7 @@ class Command:
         ])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log'))
+            self.get_memo_(git_output_, _('Git: Log (last 100)'))
         else:
             msg_status(_('Git: no log'))
 
@@ -369,7 +373,7 @@ class Command:
             filename_])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log of file'))
+            self.get_memo_(git_output_, _('Git: Log of file (last 100)'))
         else:
             msg_status(_('Git: no log of file'))
 
@@ -402,7 +406,27 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        git_output_ = self.run_git(["push"])
+        push_params = ['push']
+
+        res = dlg_input(_("Run command 'git push' with parameters:"), 'origin master')
+        if res:
+            remote_branch_parts = res.split(' ')
+            if len(remote_branch_parts) == 2:
+                push_params.append(remote_branch_parts[0])
+                push_params.append(remote_branch_parts[1])
+
+        git_output_ = self.run_git(push_params)
         if git_output_:
             self.get_memo_(git_output_, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
+
+    def pull_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        res = msg_box(_("Do you really want run command 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
+        if res == ID_OK:
+            git_output_ = self.run_git(["pull"])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Result of pull'))
+            self.request_update(ed, 'pulled')

@@ -90,3 +90,13 @@ method=commit_
 section=commands
 caption=Git Status\Push
 method=push_
+
+[item52]
+section=commands
+caption=Git Status\-
+method=_
+
+[item60]
+section=commands
+caption=Git Status\Pull
+method=pull_
