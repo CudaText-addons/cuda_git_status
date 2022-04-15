@@ -58,7 +58,7 @@ class GitManager:
         (exit_code, output) = self.run_git(["status", "-s"])
 
         #return exit_code == 1
-        return exit_code == 0
+        return bool(output)
 
     def unpushed_info__old(self, branch):
         a, b = 0, 0
@@ -129,6 +129,10 @@ class GitManager:
         if not branch:
             return ""
         ret = branch
+        print('>')
+        print(filename)
+        print(self.is_dirty())
+        print('<')
         if self.is_dirty():
             ret = ret + "*"
         a, b = self.unpushed_info(branch)
