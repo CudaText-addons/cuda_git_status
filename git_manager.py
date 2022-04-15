@@ -54,7 +54,8 @@ class GitManager:
             return ''
 
     def is_dirty(self):
-        (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
+        #(exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
+        (exit_code, output) = self.run_git(["status", "-s"])
 
         return exit_code == 1
 
