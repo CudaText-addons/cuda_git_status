@@ -129,10 +129,6 @@ class GitManager:
         if not branch:
             return ""
         ret = branch
-        print('>')
-        print(filename)
-        print(self.is_dirty())
-        print('<')
         if self.is_dirty():
             ret = ret + "*"
         a, b = self.unpushed_info(branch)
