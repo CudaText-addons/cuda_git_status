@@ -156,7 +156,7 @@ class Command:
 
         self.badge_requests.put(_filename)
 
-        timer_proc(TIMER_START, 'cuda_git_status.on_timer', 150)
+        timer_proc(TIMER_START, 'cuda_git_status.on_timer', 100)
 
     def on_timer(self, tag='', info=''):
         """ * check if thread returned new badge
