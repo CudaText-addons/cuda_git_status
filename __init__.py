@@ -424,7 +424,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        res = msg_box(_("Do you really want run command 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
+        res = msg_box(_("Do you really want run 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
             git_output_ = self.run_git(["pull"])
             if git_output_:
