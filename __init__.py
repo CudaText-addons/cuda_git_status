@@ -224,10 +224,10 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-            self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+            self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull..'), command='cuda_git_status.pull_')
+            self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull...'), command='cuda_git_status.pull_')
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
@@ -406,7 +406,14 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        git_output_ = self.run_git(["push"])
+        res = dlg_input(_("Run command 'git push' with parameters:"), 'origin master')
+        remote_branch_parts = res.split(' ')
+        push_params = ['push']
+        if len(remote_branch_parts) == 2:
+            push_params.append(remote_branch_parts[0])
+            push_params.append(remote_branch_parts[1])
+
+        git_output_ = self.run_git(push_params)
         if git_output_:
             self.get_memo_(git_output_, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
