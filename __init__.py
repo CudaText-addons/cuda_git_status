@@ -14,6 +14,7 @@ CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 BAR_H = 'main'
 DLG_W = 700
 DLG_H = 400
+TIMERCALL = 'cuda_git_status.on_timer'
 
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
 
@@ -156,7 +157,7 @@ class Command:
 
         self.badge_requests.put(_filename)
 
-        timer_proc(TIMER_START, 'cuda_git_status.on_timer', 100)
+        timer_proc(TIMER_START, TIMERCALL, 100)
 
     def on_timer(self, tag='', info=''):
         """ * check if thread returned new badge
@@ -171,7 +172,7 @@ class Command:
         if self.badge_requests.empty() \
                 and self.badge_results.empty() \
                 and not is_getting_badge.is_set():
-            timer_proc(TIMER_STOP, 'cuda_git_status.on_timer', 0)
+            timer_proc(TIMER_STOP, TIMERCALL, 0)
 
     def update(self, fn, badge):
 
