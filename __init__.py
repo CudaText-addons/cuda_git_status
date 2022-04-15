@@ -321,19 +321,19 @@ class Command:
             return ''
         return output
 
-    def get_memo_(self, git_output_, caption_):
-        output_ = git_output_.replace("\n", "\r")
+    def show_memo(self, text, caption):
+        output_ = text.replace("\n", "\r")
         c1 = chr(1)
         text_ = '\n'.join([]
             +[c1.join(['type=memo', 'val='+output_, 'pos=%d,%d,%d,%d'%(6, 6, DLG_W-6, DLG_H-6*2-25), 'ex0=1', 'ex1=1'])]
             +[c1.join(['type=button', 'pos=%d,%d,%d,0'%(DLG_W-100, DLG_H-6-25, DLG_W-6), 'ex0=1', 'cap='+_('&OK')])]
         )
-        dlg_custom(caption_, DLG_W, DLG_H, text_, focused=1)
+        dlg_custom(caption, DLG_W, DLG_H, text_, focused=1)
 
     def get_status_(self):
         git_output_ = self.run_git(["status"])
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Status'))
+            self.show_memo(git_output_, _('Git: Status'))
 
     def add_file_(self):
         if not self.is_git():
@@ -354,7 +354,7 @@ class Command:
         if res == ID_OK:
             git_output_ = self.run_git(["restore", filename_])
             if git_output_:
-                self.get_memo_(git_output_, _('Git: Log of restore file'))
+                self.show_memo(git_output_, _('Git: Log of restore file'))
 
     def get_log_(self):
         git_output_ = self.run_git([
@@ -362,7 +362,7 @@ class Command:
         ])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log (last 100)'))
+            self.show_memo(git_output_, _('Git: Log (last 100)'))
         else:
             msg_status(_('Git: no log'))
 
@@ -373,21 +373,21 @@ class Command:
             filename_])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log of file (last 100)'))
+            self.show_memo(git_output_, _('Git: Log of file (last 100)'))
         else:
             msg_status(_('Git: no log of file'))
 
     def get_notstaged_files_(self):
         git_output_ = self.run_git(["diff", "--name-only"])
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Changes not staged for commit'))
+            self.show_memo(git_output_, _('Git: Changes not staged for commit'))
         else:
             msg_status(_('Git: no not-staged files'))
 
     def get_untracked_files_(self):
         git_output_ = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Untracked files'))
+            self.show_memo(git_output_, _('Git: Untracked files'))
         else:
             msg_status(_('Git: no untracked files'))
 
@@ -399,7 +399,7 @@ class Command:
         if txt_:
             git_output_ = self.run_git(["commit", "-m", txt_])
             if git_output_:
-                self.get_memo_(git_output_, _('Git: Result of commit'))
+                self.show_memo(git_output_, _('Git: Result of commit'))
             self.request_update(ed, 'commited')
 
     def push_(self):
@@ -417,7 +417,7 @@ class Command:
 
         git_output_ = self.run_git(push_params)
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Result of push'))
+            self.show_memo(git_output_, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
 
     def pull_(self):
@@ -428,5 +428,5 @@ class Command:
         if res == ID_OK:
             git_output_ = self.run_git(["pull"])
             if git_output_:
-                self.get_memo_(git_output_, _('Git: Result of pull'))
+                self.show_memo(git_output_, _('Git: Result of pull'))
             self.request_update(ed, 'pulled')
