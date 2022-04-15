@@ -233,6 +233,11 @@ class Command:
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
+        list_staged    = self.run_git(["diff", "--staged"])
+        print('>')
+        print(list_staged)
+        print(bool(list_staged))
+        print('<')
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -361,7 +366,7 @@ class Command:
         ])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log'))
+            self.get_memo_(git_output_, _('Git: Log (last 100)'))
         else:
             msg_status(_('Git: no log'))
 
@@ -372,7 +377,7 @@ class Command:
             filename_])
 
         if git_output_:
-            self.get_memo_(git_output_, _('Git: Log of file'))
+            self.get_memo_(git_output_, _('Git: Log of file (last 100)'))
         else:
             msg_status(_('Git: no log of file'))
 
