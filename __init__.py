@@ -407,7 +407,7 @@ class Command:
             return msg_status(_('No Git repo'))
 
         res = dlg_input(_("Run 'git push' with parameters:"), '') # 'origin master')
-        if not res:
+        if res is None:
             return
             
         push_params = ['push']
