@@ -30,7 +30,7 @@ def git_relative_path(fn):
     while dir and not is_dir_root(dir) and not os.path.isdir(dir+os.sep+'.git'):
         dir = os.path.dirname(dir)
     return os.path.relpath(fn, dir) if dir and not is_dir_root(dir) else ''
-    
+
 def gitman_loop(q_fns, q_badges):
     while True:
         fn = q_fns.get()    # wait for request
@@ -97,7 +97,7 @@ class Command:
         self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
         self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
-        
+
         global DLG_W
         global DLG_H
         DLG_W = int(ini_read(fn_config, 'git_status', 'dialog_w', str(DLG_W)))
@@ -197,7 +197,7 @@ class Command:
 
     def is_git(self):
         s = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_TEXT, tag=CELL_TAG)
-        return bool(s)        
+        return bool(s)
 
     def callback_statusbar_click(self, id_dlg, id_ctl, data='', info=''):
         if not self.is_git():
@@ -225,11 +225,14 @@ class Command:
 
             self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push'), command='cuda_git_status.push_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull..'), command='cuda_git_status.pull_')
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
-        dirty = gitmanager.is_dirty()        
+        dirty = gitmanager.is_dirty()
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -406,3 +409,14 @@ class Command:
         if git_output_:
             self.get_memo_(git_output_, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
+
+    def pull_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        res = msg_box(_("Do you really want run command 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
+        if res == ID_OK:
+            git_output_ = self.run_git(["pull"])
+            if git_output_:
+                self.get_memo_(git_output_, _('Git: Result of pull'))
+            self.request_update(ed, 'pulled')
