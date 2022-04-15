@@ -406,12 +406,14 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        res = dlg_input(_("Run command 'git push' with parameters:"), 'origin master')
-        remote_branch_parts = res.split(' ')
         push_params = ['push']
-        if len(remote_branch_parts) == 2:
-            push_params.append(remote_branch_parts[0])
-            push_params.append(remote_branch_parts[1])
+
+        res = dlg_input(_("Run command 'git push' with parameters:"), 'origin master')
+        if res:
+            remote_branch_parts = res.split(' ')
+            if len(remote_branch_parts) == 2:
+                push_params.append(remote_branch_parts[0])
+                push_params.append(remote_branch_parts[1])
 
         git_output_ = self.run_git(push_params)
         if git_output_:
