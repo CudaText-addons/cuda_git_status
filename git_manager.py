@@ -10,6 +10,7 @@ class GitManager:
     def __init__(self):
         self.git = 'git'
         self.prefix = ''
+        self.filename = ''
 
     def run_git(self, args):
         cmd = [self.git] + args
