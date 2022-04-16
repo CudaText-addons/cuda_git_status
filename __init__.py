@@ -157,7 +157,7 @@ class Command:
 
         self.badge_requests.put(_filename)
 
-        timer_proc(TIMER_START, TIMERCALL, 80)
+        timer_proc(TIMER_START, TIMERCALL, 70)
 
     def on_timer(self, tag='', info=''):
         """ * check if thread returned new badge
