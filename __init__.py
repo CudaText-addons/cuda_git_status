@@ -258,8 +258,7 @@ class Command:
         # 'push'
         get_status = self.run_git(["status"])
         m = re.search(r'use "git push" to publish your local commits', get_status)
-        use_push = True if m else False
-        menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=(use_push))
+        menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=bool(m))
 
         menu_proc(self.h_menu, MENU_SHOW)
 
