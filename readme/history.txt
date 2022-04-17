@@ -1,3 +1,8 @@
+
+2022.04.17
++ add: disable 'push' menu item when needed
++ add: show proper branch name in the 'push' parameters
+
 2022.04.14
 + add: options for 'status' dialog width/height
 + add: more menu items in the statusbar click menu
