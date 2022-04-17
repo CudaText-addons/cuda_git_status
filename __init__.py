@@ -337,9 +337,9 @@ class Command:
         dlg_custom(caption, DLG_W, DLG_H, text_, focused=1)
 
     def get_status_(self):
-        git_output_ = self.run_git(["status"])
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Status'))
+        text = self.run_git(["status"])
+        if text:
+            self.show_memo(text, _('Git: Status'))
 
     def add_file_(self):
         if not self.is_git():
@@ -358,42 +358,42 @@ class Command:
         filename_ = ed.get_filename()
         res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
-            git_output_ = self.run_git(["restore", filename_])
-            if git_output_:
-                self.show_memo(git_output_, _('Git: Log of restore file'))
+            text = self.run_git(["restore", filename_])
+            if text:
+                self.show_memo(text, _('Git: Log of restore file'))
 
     def get_log_(self):
-        git_output_ = self.run_git([
+        text = self.run_git([
             '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
         ])
 
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Log (last 100)'))
+        if text:
+            self.show_memo(text, _('Git: Log (last 100)'))
         else:
             msg_status(_('Git: no log'))
 
     def get_log_file_(self):
         filename_ = ed.get_filename()
-        git_output_ = self.run_git([
+        text = self.run_git([
             '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
             filename_])
 
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Log of file (last 100)'))
+        if text:
+            self.show_memo(text, _('Git: Log of file (last 100)'))
         else:
             msg_status(_('Git: no log of file'))
 
     def get_notstaged_files_(self):
-        git_output_ = self.run_git(["diff", "--name-only"])
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Changes not staged for commit'))
+        text = self.run_git(["diff", "--name-only"])
+        if text:
+            self.show_memo(text, _('Git: Changes not staged for commit'))
         else:
             msg_status(_('Git: no not-staged files'))
 
     def get_untracked_files_(self):
-        git_output_ = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Untracked files'))
+        text = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
+        if text:
+            self.show_memo(text, _('Git: Untracked files'))
         else:
             msg_status(_('Git: no untracked files'))
 
@@ -403,9 +403,9 @@ class Command:
 
         txt_ = dlg_input('Git: Commit changes', '')
         if txt_:
-            git_output_ = self.run_git(["commit", "-m", txt_])
-            if git_output_:
-                self.show_memo(git_output_, _('Git: Result of commit'))
+            text = self.run_git(["commit", "-m", txt_])
+            if text:
+                self.show_memo(text, _('Git: Result of commit'))
             self.request_update(ed, 'commited')
 
     def push_(self):
@@ -421,9 +421,9 @@ class Command:
         if len(s) == 2:
             push_params += s
 
-        git_output_ = self.run_git(push_params)
-        if git_output_:
-            self.show_memo(git_output_, _('Git: Result of push'))
+        text = self.run_git(push_params)
+        if text:
+            self.show_memo(text, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
 
     def pull_(self):
@@ -432,7 +432,7 @@ class Command:
 
         res = msg_box(_("Do you really want to run 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
         if res == ID_OK:
-            git_output_ = self.run_git(["pull"])
-            if git_output_:
-                self.show_memo(git_output_, _('Git: Result of pull'))
+            text = self.run_git(["pull"])
+            if text:
+                self.show_memo(text, _('Git: Result of pull'))
             self.request_update(ed, 'pulled')
