@@ -235,6 +235,7 @@ class Command:
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
+        branch = gitmanager.branch()
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
         list_notstaged = self.run_git(["diff", "--name-only"])
@@ -259,9 +260,8 @@ class Command:
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=((dirty and list_staged) or no_commits_yet))
 
         # 'commit amend'
-        a, b = gitmanager.unpushed_info(gitmanager.branch())
-        en = True if a or b else False
-        menu_proc(self.h_menu_commit_amend, MENU_SET_ENABLED, command=en)
+        a, b = gitmanager.unpushed_info(branch)
+        menu_proc(self.h_menu_commit_amend, MENU_SET_ENABLED, command=bool(a) or bool(b))
 
         # 'push'
         en = 'use "git push" to publish your local commits' in self.run_git(["status"])
