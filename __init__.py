@@ -4,7 +4,6 @@ from queue import Queue
 from threading import Thread, Event
 from . import git_manager
 from .git_manager import GitManager
-import re
 
 from cudatext import *
 from cudax_lib import get_translation
@@ -256,9 +255,9 @@ class Command:
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=(dirty and list_staged))
 
         # 'push'
-        get_status = self.run_git(["status"])
-        m = re.search(r'use "git push" to publish your local commits', get_status)
-        menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=bool(m))
+        text = self.run_git(["status"])
+        en = 'use "git push" to publish your local commits' in text
+        menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=en)
 
         menu_proc(self.h_menu, MENU_SHOW)
 
