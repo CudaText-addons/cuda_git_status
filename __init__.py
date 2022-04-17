@@ -234,7 +234,6 @@ class Command:
         fn_rel = git_relative_path(fn)
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
-        list_staged    = bool(self.run_git(["diff", "--name-only", "--staged"]))
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
@@ -252,11 +251,12 @@ class Command:
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
-        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=(dirty and list_staged))
+        list_staged = bool(self.run_git(["diff", "--name-only", "--staged"]))
+        no_commits_yet = 'No commits yet' in self.run_git(["status"])
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=((dirty and list_staged) or no_commits_yet))
 
         # 'push'
-        text = self.run_git(["status"])
-        en = 'use "git push" to publish your local commits' in text
+        en = 'use "git push" to publish your local commits' in self.run_git(["status"])
         menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=en)
 
         menu_proc(self.h_menu, MENU_SHOW)
