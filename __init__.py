@@ -224,8 +224,11 @@ class Command:
             self.h_menu_restore   = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
-            self.h_menu_commit    = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-            self.h_menu_push      = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
+            self.h_menu_commit       = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
+            self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit (amend)...'), command='cuda_git_status.commit_amend_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull...'), command='cuda_git_status.pull_')
@@ -254,6 +257,11 @@ class Command:
         list_staged = bool(self.run_git(["diff", "--name-only", "--staged"]))
         no_commits_yet = 'No commits yet' in self.run_git(["status"])
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=((dirty and list_staged) or no_commits_yet))
+
+        # 'commit amend'
+        a, b = gitmanager.unpushed_info(gitmanager.branch())
+        en = True if a or b else False
+        menu_proc(self.h_menu_commit_amend, MENU_SET_ENABLED, command=en)
 
         # 'push'
         en = 'use "git push" to publish your local commits' in self.run_git(["status"])
@@ -407,6 +415,17 @@ class Command:
             if text:
                 self.show_memo(text, _('Git: Result of commit'))
             self.request_update(ed, 'commited')
+
+    def commit_amend_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        txt_ = dlg_input('Git: Commit (amend) changes', '')
+        if txt_:
+            text = self.run_git(["commit", "--amend", "-m", txt_])
+            if text:
+                self.show_memo(text, _('Git: Result of commit (amend)'))
+            self.request_update(ed, 'commited_amend')
 
     def push_(self):
         if not self.is_git():
