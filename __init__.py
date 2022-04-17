@@ -4,6 +4,7 @@ from queue import Queue
 from threading import Thread, Event
 from . import git_manager
 from .git_manager import GitManager
+import re
 
 from cudatext import *
 from cudax_lib import get_translation
@@ -254,6 +255,12 @@ class Command:
         # 'commit'
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=(dirty and list_staged))
 
+        # 'push'
+        get_status = self.run_git(["status"])
+        m = re.search(r'use "git push" to publish your local commits', get_status)
+        use_push = True if m else False
+        menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=(use_push))
+
         menu_proc(self.h_menu, MENU_SHOW)
 
     def on_tab_change(self, ed_self):
@@ -407,10 +414,10 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        res = dlg_input(_("Run 'git push' with parameters:"), '') # 'origin master')
+        res = dlg_input(_("Run 'git push' with parameters:"), 'origin ' + gitmanager.branch())
         if res is None:
             return
-            
+
         push_params = ['push']
         s = res.split(' ')
         if len(s) == 2:
