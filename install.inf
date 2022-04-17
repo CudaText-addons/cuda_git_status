@@ -88,10 +88,15 @@ method=commit_
 
 [item51]
 section=commands
+caption=Git Status\Commit (amend)...
+method=commit_amend_
+
+[item52]
+section=commands
 caption=Git Status\Push
 method=push_
 
-[item52]
+[item53]
 section=commands
 caption=Git Status\-
 method=_
