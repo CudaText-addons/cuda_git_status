@@ -407,8 +407,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        branch = 'origin ' + gitmanager.branch()
-        res = dlg_input(_("Run 'git push' with parameters:"), branch)
+        res = dlg_input(_("Run 'git push' with parameters:"), 'origin ' + gitmanager.branch())
         if res is None:
             return
 
