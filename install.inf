@@ -1,6 +1,6 @@
 [info]
 title=Git Status
-desc=Shows Git information in the statusbar: current branch name, clean state, etc. Shows 'gutter decoration' for changed Git lines. Gives menu items (Add, Push, Pull, Commit, Get status, Jump to next changed line, etc) by clicking on the new statusbar-cell.
+desc=Shows Git information in the statusbar: current branch name, clean state, etc. Shows 'gutter decoration' for changed Git lines. Gives menu items (Add, Push, Pull, Commit, Get status, Jump to next changed line, etc) by clicking on the new statusbar cell.
 type=cudatext-plugin
 subdir=cuda_git_status
 homepage=https://github.com/CudaText-addons/cuda_git_status
