@@ -1,25 +1,26 @@
 
-2022.04.17
+2022.04.18
++ add: 'Commit (amend)' and 'Pull' menu items (by @ildarkhasanshin)
 + add: disable 'push' menu item when needed
 + add: show proper branch name in the 'push' parameters
 
 2022.04.14
 + add: options for 'status' dialog width/height
 + add: more menu items in the statusbar click menu
-+ add: click on the Git statusbar cell shows new menu with several commands (patches by @ildarkhasanshin and Alexey T.)
++ add: click on the Git statusbar cell shows new menu with several commands (by @ildarkhasanshin and Alexey T.)
 
 2022.04.12
 + added: option "decor_style" (by Alexey)
 
 2022.04.10
-+ added: commands for jump to git-changes (patch by @ildarkhasanshin)
++ added: commands for jump to git-changes (by @ildarkhasanshin)
 
 2022.04.10
 * change: config file is now settings/plugins.ini (by Alexey)
-+ added: changed Git lines are now marked on the gutter by a color mark (patch by @ildarkhasanshin)
++ added: changed Git lines are now marked on the gutter by a color mark (by @ildarkhasanshin)
 
 2022.04.05
-* change: get the branch info using Git key "rev-parse" (patch from @ildarkhasanshin)
+* change: get the branch info using Git key "rev-parse" (by @ildarkhasanshin)
 
 2021.07.13
 - fix: don't call Git too often (@halfbrained)
