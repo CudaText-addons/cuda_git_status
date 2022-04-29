@@ -220,6 +220,9 @@ class Command:
             self.h_menu_untracked = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
+            self.h_menu_pull = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull...'), command='cuda_git_status.pull_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
             self.h_menu_add       = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
             self.h_menu_restore   = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
@@ -229,9 +232,6 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
-
-            self.h_menu_pull      = menu_proc(self.h_menu, MENU_ADD, caption=_('Pull...'), command='cuda_git_status.pull_')
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
