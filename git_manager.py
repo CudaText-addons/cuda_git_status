@@ -40,8 +40,10 @@ class GitManager:
         stdoutdata, stderrdata = p.communicate()
         out_text = stdoutdata.decode('utf-8')
         error_text = stderrdata.decode('utf-8')
-        if error_text:
-            print("NOTE: Git error: " + error_text)
+
+        # don't always show error_text, it may be normal message for 'push' action
+        if '\nfatal: ' in error_text:
+            print("NOTE: [Git Status] " + error_text)
 
         ''' #debug
         if stdoutdata:
