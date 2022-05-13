@@ -40,7 +40,7 @@ class GitManager:
         stdoutdata, stderrdata = p.communicate()
         out_text = stdoutdata.decode('utf-8')
         error_text = stderrdata.decode('utf-8')
-        if '\nfatal: unable to auto-detect email address' in error_text:
+        if error_text:
             print("NOTE: Git error: " + error_text)
 
         ''' #debug
