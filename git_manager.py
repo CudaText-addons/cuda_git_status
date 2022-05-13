@@ -22,6 +22,7 @@ class GitManager:
             p = subprocess.Popen(cmd, 
                                  stdin=subprocess.PIPE, 
                                  stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
                                  cwd=cwd,
                                  startupinfo=startupinfo)
         else:
@@ -31,18 +32,25 @@ class GitManager:
             p = subprocess.Popen(cmd, 
                                  stdin=subprocess.PIPE, 
                                  stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
                                  cwd=cwd,
                                  env=my_env)
 
-        #p.wait() # this makes deadlock if process gives lot of data, it's documented in Python docs
-        stdoutdata, _ = p.communicate()
+        #p.wait() # makes deadlock if process gives lot of data
+        stdoutdata, stderrdata = p.communicate()
+        out_text = stdoutdata.decode('utf-8')
+        error_text = stderrdata.decode('utf-8')
+        if 'Author identity unknown' in error_text:
+            print("NOTE: Git Status error: " + error_text)
+
         ''' #debug
         if stdoutdata:
             print('Git for:', repr(args), ', gets:', stdoutdata)
         else:
             print('Git fails:', repr(args))
         '''
-        return (p.returncode, stdoutdata.decode('utf-8'))
+
+        return (p.returncode, out_text)
 
     def getcwd(self):
         f = self.filename
