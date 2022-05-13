@@ -19,15 +19,22 @@ class GitManager:
             # make sure console does not come up
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                 cwd=cwd,startupinfo=startupinfo)
+            p = subprocess.Popen(cmd, 
+                                 stdin=subprocess.PIPE, 
+                                 stdout=subprocess.PIPE,
+                                 cwd=cwd,
+                                 startupinfo=startupinfo)
         else:
             my_env = os.environ.copy()
             my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
             my_env["LANG"] = "en_US"
-            p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                 cwd=cwd,env=my_env)
-        p.wait()
+            p = subprocess.Popen(cmd, 
+                                 stdin=subprocess.PIPE, 
+                                 stdout=subprocess.PIPE,
+                                 cwd=cwd,
+                                 env=my_env)
+
+        #p.wait() # this makes deadlock if process gives lot of data, it's documented in Python docs
         stdoutdata, _ = p.communicate()
         ''' #debug
         if stdoutdata:
