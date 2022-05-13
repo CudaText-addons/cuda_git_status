@@ -40,8 +40,8 @@ class GitManager:
         stdoutdata, stderrdata = p.communicate()
         out_text = stdoutdata.decode('utf-8')
         error_text = stderrdata.decode('utf-8')
-        if 'Author identity unknown' in error_text:
-            print("NOTE: Git Status error: " + error_text)
+        if '\nfatal: unable to auto-detect email address' in error_text:
+            print("NOTE: Git error: " + error_text)
 
         ''' #debug
         if stdoutdata:
