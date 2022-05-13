@@ -1,4 +1,7 @@
 
+2022.05.13
+- fix: hanging of 'Get log' on Windows (by @veksha)
+
 2022.04.18
 + add: 'Commit (amend)' and 'Pull' menu items (by @ildarkhasanshin)
 + add: disable 'push' menu item when needed
