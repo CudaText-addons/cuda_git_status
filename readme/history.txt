@@ -1,6 +1,7 @@
 
 2022.05.13
-- fix: hanging of 'Get log' on Windows (thanks @veksha) 
++ add: show console 'NOTE: .....' line if Git writes to stderr (thanks @veksha)
+- fix: hanging of 'Get log' on Windows (thanks @veksha)
 
 2022.04.18
 + add: 'Commit (amend)' and 'Pull' menu items (by @ildarkhasanshin)
