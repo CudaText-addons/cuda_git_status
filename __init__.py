@@ -371,23 +371,25 @@ class Command:
                 self.show_memo(text, _('Git: Log of restore file'))
 
     def get_log_(self):
+        count = 50 # note: value 100 gives hanging of plugin on Win10, p.wait() hangs
         text = self.run_git([
-            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=%d'%count,
         ])
 
         if text:
-            self.show_memo(text, _('Git: Log (last 100)'))
+            self.show_memo(text, _('Git: Log (last %d)')%count)
         else:
             msg_status(_('Git: no log'))
 
     def get_log_file_(self):
+        count = 100
         filename_ = ed.get_filename()
         text = self.run_git([
-            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=100',
+            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=%d'%count,
             filename_])
 
         if text:
-            self.show_memo(text, _('Git: Log of file (last 100)'))
+            self.show_memo(text, _('Git: Log of file (last %d)')%count)
         else:
             msg_status(_('Git: no log of file'))
 
