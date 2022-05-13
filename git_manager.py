@@ -43,7 +43,7 @@ class GitManager:
 
         # don't always show error_text, it may be normal message for 'push' action
         if '\nfatal: ' in error_text:
-            print("NOTE: [Git Status] " + error_text)
+            print("NOTE: Git Status: ", error_text)
 
         ''' #debug
         if stdoutdata:
