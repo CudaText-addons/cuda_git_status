@@ -371,7 +371,7 @@ class Command:
                 self.show_memo(text, _('Git: Log of restore file'))
 
     def get_log_(self):
-        count = 50 # note: value 100 gives hanging of plugin on Win10, p.wait() hangs
+        count = 100
         text = self.run_git([
             '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=%d'%count,
         ])
