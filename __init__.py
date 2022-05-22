@@ -164,9 +164,9 @@ class Command:
             * stop timer if thread is done
         """
 
-        if not self.badge_results.empty(): # have new badge
-            _fn, _badge = self.badge_results.get()
-            self.update(_fn, _badge)
+        #if not self.badge_results.empty(): # have new badge
+        _fn, _badge = self.badge_results.get()
+        self.update(_fn, _badge)
 
         # stop
         if self.badge_requests.empty() \
