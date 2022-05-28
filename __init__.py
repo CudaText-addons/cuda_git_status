@@ -164,10 +164,8 @@ class Command:
             * stop timer if thread is done
         """
 
-        if not self.badge_results.empty(): # has new badge
-            _fn, _badge = self.badge_results.get()
-            self.update(_fn, _badge)
-        time.sleep(0.08) # giving cpu time to gitman thread and making it faster
+        _fn, _badge = self.badge_results.get()
+        self.update(_fn, _badge)
 
         # stop
         if self.badge_requests.empty() \
