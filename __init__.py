@@ -463,15 +463,16 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        diffs = self.run_git(["diff","HEAD",ed.get_filename()])
-        DiffDialog().show_diff_dlg(diffs, _('Git: Result of diff HEAD '+ed.get_filename()))
+        fn = ed.get_filename()
+        diffs = self.run_git(["diff", "HEAD", fn])
+        DiffDialog().show_diff_dlg(diffs, _('Git: diff HEAD')+' "'+os.path.basename(fn)+'"')
 
     def diff_all_(self):
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
         diffs = self.run_git(["diff","HEAD"])
-        DiffDialog().show_diff_dlg(diffs, _('Git: Result of diff HEAD'))
+        DiffDialog().show_diff_dlg(diffs, _('Git: diff HEAD'))
 
 class DiffDialog:
     def __init__(self):
@@ -515,7 +516,7 @@ class DiffDialog:
         ed0.set_prop(PROP_GUTTER_BM, False)
         ed0.set_text_all(diffs)
         ed0.set_prop(PROP_RO, True)
-        ed0.set_prop(PROP_LEXER_FILE, 'diff')
+        ed0.set_prop(PROP_LEXER_FILE, 'Diff')
 
         n=dlg_proc(h, DLG_CTL_ADD, 'button')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
@@ -527,7 +528,7 @@ class DiffDialog:
             'a_b': ('', ']'),
             'a_r': ('', ']'),
             'sp_a': 6,
-            'on_change': lambda *args, **vargs: self.close_diff_dlg,
+            'on_change': self.callback_btn_close,
             })
 
 
@@ -543,8 +544,8 @@ class DiffDialog:
 
 #        dlg_proc(h, DLG_CTL_FOCUS, name='ed')
         dlg_proc(h, DLG_SHOW_MODAL)
-        self.close_diff_dlg()
-
-    def close_diff_dlg(self,tag='', info=''):
-        dlg_proc(self.h_dlg, DLG_FREE)
+        dlg_proc(h, DLG_FREE)
         self.h_dlg = None
+
+    def callback_btn_close(self, id_dlg, id_ctl, data='', info=''):
+        dlg_proc(self.h_dlg, DLG_HIDE)
