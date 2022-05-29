@@ -231,6 +231,8 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
+            self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
+            self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
@@ -456,3 +458,93 @@ class Command:
             if text:
                 self.show_memo(text, _('Git: Result of pull'))
             self.request_update(ed, 'pulled')
+
+    def diff_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        diffs = self.run_git(["diff","HEAD",ed.get_filename()])
+        DiffDialog().show_diff_dlg(diffs, _('Git: Result of diff HEAD '+ed.get_filename()))
+
+    def diff_all_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        diffs = self.run_git(["diff","HEAD"])
+        DiffDialog().show_diff_dlg(diffs, _('Git: Result of diff HEAD'))
+
+class DiffDialog:
+    def __init__(self):
+        self.h_dlg = None
+
+    def show_diff_dlg(self,diffs,caption):
+        if self.h_dlg:
+            return
+
+        h=dlg_proc(0, DLG_CREATE)
+        self.h_dlg = h
+
+        dlg_proc(h, DLG_PROP_SET, prop={
+            'cap': caption,
+            'w': 900,
+            'h': 500,
+            'resize': True,
+            'keypreview': True,
+#            'on_close': lambda *args, **vargs: timer_proc(TIMER_START_ONE, self.close_diff_dlg, 200)
+            })
+
+        n=dlg_proc(h, DLG_CTL_ADD, 'editor')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'ed',
+            'x': 6,
+            'y': 6,
+            'a_r': ('', ']'),
+            'a_b': ('', ']'),
+            'sp_l': 6,
+            'sp_t': 6,
+            'sp_r': 6,
+            'sp_b': 38,
+            })
+
+        h_editor = dlg_proc(h, DLG_CTL_HANDLE, index=n)
+        ed0 = Editor(h_editor)
+        ed0.set_prop(PROP_MICROMAP, False)
+        ed0.set_prop(PROP_MINIMAP, False)
+        ed0.set_prop(PROP_RULER, False)
+        ed0.set_prop(PROP_GUTTER_NUM, False)
+        ed0.set_prop(PROP_GUTTER_BM, False)
+        ed0.set_text_all(diffs)
+        ed0.set_prop(PROP_RO, True)
+        ed0.set_prop(PROP_LEXER_FILE, 'diff')
+
+        n=dlg_proc(h, DLG_CTL_ADD, 'button')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'btn_close',
+            'cap': _('Close'),
+            'w': 120,
+            'a_l': None,
+            'a_t': None,
+            'a_b': ('', ']'),
+            'a_r': ('', ']'),
+            'sp_a': 6,
+            'on_change': lambda *args, **vargs: self.close_diff_dlg,
+            })
+
+
+        #set line states
+        for i in range(ed0.get_line_count()):
+            state = LINESTATE_NORMAL
+            s = ed0.get_text_line(i)
+            if s.startswith('+') and not s.startswith('+++'):
+                state = LINESTATE_ADDED
+            elif s.startswith('-') and not s.startswith('---'):
+                state = LINESTATE_CHANGED
+            ed0.set_prop(PROP_LINE_STATE, (i, state))
+
+#        dlg_proc(h, DLG_CTL_FOCUS, name='ed')
+        dlg_proc(h, DLG_SHOW_MODAL)
+        self.close_diff_dlg()
+
+    def close_diff_dlg(self,tag='', info=''):
+        dlg_proc(self.h_dlg, DLG_FREE)
+        self.h_dlg = None
