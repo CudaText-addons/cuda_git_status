@@ -1,4 +1,7 @@
 
+2022.05.29
++ add: menu items "View file changes" and "View all changes", which show diff in a dialog (by @veksha)
+
 2022.05.13
 + add: show console 'NOTE: .....' line if Git writes to stderr (thanks @veksha)
 - fix: hanging of 'Get log' on Windows (thanks @veksha)
