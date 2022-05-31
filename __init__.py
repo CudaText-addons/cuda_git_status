@@ -228,11 +228,13 @@ class Command:
 
             self.h_menu_commit       = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit (amend)...'), command='cuda_git_status.commit_amend_')
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
-
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
             self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
+            self.h_menu_checkout     = menu_proc(self.h_menu, MENU_ADD, caption=_('Checkout branch'))
+
 
         fn = ed.get_filename()
         fn_rel = git_relative_path(fn)
@@ -267,6 +269,22 @@ class Command:
         # 'push'
         en = 'use "git push" to publish your local commits' in self.run_git(["status"])
         menu_proc(self.h_menu_push, MENU_SET_ENABLED, command=en)
+
+        # 'checkout branch'
+        list_branches = self.run_git(["branch"])
+        menu_proc(self.h_menu_checkout,MENU_CLEAR)
+        for branch in list_branches.splitlines():
+            b = branch.strip()
+            callback = 'module=cuda_git_status;cmd=checkout_;info={};'
+            if b.startswith('*'):
+                b = b[1:].strip()
+                m = menu_proc(self.h_menu_checkout, MENU_ADD, caption=b, command=callback.format(b))
+                menu_proc(m, MENU_SET_CHECKED, command=True)
+                menu_proc(m, MENU_SET_RADIOITEM, command=True)
+            else:
+                m = menu_proc(self.h_menu_checkout, MENU_ADD, caption=b, command=callback.format(b))
+        menu_proc(self.h_menu_checkout, MENU_ADD, caption='-')
+        menu_proc(self.h_menu_checkout, MENU_ADD, caption='<new branch>', command='cuda_git_status.checkout_new_branch_')
 
         menu_proc(self.h_menu, MENU_SHOW)
 
@@ -473,6 +491,29 @@ class Command:
 
         diffs = self.run_git(["diff","HEAD"])
         DiffDialog().show_diff_dlg(diffs, _('Git: diff HEAD'))
+
+    def checkout_(self, info):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+        branch_to = info
+
+        branch = gitmanager.branch()
+        if branch == branch_to:
+            msg_box('Already on a "{}" branch.'.format(branch), MB_ICONINFO)
+            return
+
+        self.run_git(["checkout",branch_to])
+        self.request_update(ed, 'checked_out')
+
+    def checkout_new_branch_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        txt_ = dlg_input('Please, enter name of your new branch:', '')
+        if txt_:
+            text = self.run_git(["checkout", "-b", txt_])
+            self.request_update(ed, 'checked_out_new_branch')
+
 
 class DiffDialog:
     def __init__(self):
