@@ -1,4 +1,7 @@
 
+2022.05.31
++ add: menu item "Checkout" with list of all branches + "new branch" item (by @veksha)
+
 2022.05.29
 + add: menu items "View file changes" and "View all changes", which show diff in a dialog (by @veksha)
 
