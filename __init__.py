@@ -499,7 +499,7 @@ class Command:
 
         branch = gitmanager.branch()
         if branch == branch_to:
-            msg_box('Already on a "{}" branch.'.format(branch), MB_ICONINFO)
+            msg_box('Already on a "{}" branch.'.format(branch), MB_OK+MB_ICONINFO)
             return
 
         self.run_git(["checkout",branch_to])
@@ -509,7 +509,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        txt_ = dlg_input('Please, enter name of your new branch:', '')
+        txt_ = dlg_input(_('Name of new branch:'), '')
         if txt_:
             text = self.run_git(["checkout", "-b", txt_])
             self.request_update(ed, 'checked_out_new_branch')
