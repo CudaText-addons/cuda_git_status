@@ -483,7 +483,7 @@ class Command:
         remote = remotes[index]
         branch = gitmanager.branch()
         res = msg_box(
-            _("Do you really want to run")+" 'git pull {} {}'?".format(remote,branch),
+            _("Do you really want to run 'git pull {} {}'?").format(remote,branch),
             MB_OKCANCEL+MB_ICONQUESTION
         )
         if res == ID_OK:
