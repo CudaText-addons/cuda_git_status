@@ -63,7 +63,7 @@ method=get_status_
 
 [item31]
 section=commands
-caption=Git Status\Get not-staged files
+caption=Git Status\Get non-staged files
 method=get_notstaged_files_
 
 [item32]
