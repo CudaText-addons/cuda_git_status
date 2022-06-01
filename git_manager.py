@@ -45,10 +45,12 @@ class GitManager:
 
         # don't always show error_text, it may be normal message for 'push' action
         if (
-            '\nfatal: ' in error_text or
-            'error: The following untracked working tree files would be overwritten by checkout:' in error_text or
-            'error: Your local changes to the following files would be overwritten by checkout:' in error_text or
-            "fatal: couldn't find remote ref" in error_text
+            'fatal: ' in error_text or
+            'error: ' in error_text
+#            'error: The following untracked working tree files would be overwritten by checkout:' in error_text or
+#            'error: Your local changes to the following files would be overwritten by checkout:' in error_text or
+#            'error: you need to resolve your current index first' in error_text or
+#            "fatal: couldn't find remote ref" in error_text
         ):
             print("NOTE: Git Status: ", error_text)
             self.lastError = error_text
