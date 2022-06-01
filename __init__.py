@@ -529,6 +529,22 @@ class Command:
             text = self.run_git(["checkout", "-b", txt_])
             self.request_update(ed, 'checked_out_new_branch')
 
+    def checkout_dlg_menu_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        branches = self.run_git(['branch']).splitlines()
+        index = dlg_menu(DMENU_LIST, branches, caption=_('Select a branch'))
+        if index is None:
+            return
+
+        branch_to = branches[index].strip()
+        if branch_to.startswith('*'):
+            return
+
+        self.run_git(["checkout",branch_to])
+        self.request_update(ed, 'checked_out')
+
 
 class DiffDialog:
     def __init__(self):
