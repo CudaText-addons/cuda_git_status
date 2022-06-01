@@ -47,6 +47,7 @@ class GitManager:
         if (
             '\nfatal: ' in error_text or
             'error: The following untracked working tree files would be overwritten by checkout:' in error_text or
+            'error: Your local changes to the following files would be overwritten by checkout:' in error_text or
             "fatal: couldn't find remote ref" in error_text
         ):
             print("NOTE: Git Status: ", error_text)

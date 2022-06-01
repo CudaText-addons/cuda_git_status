@@ -31,6 +31,16 @@ section=commands
 caption=Git Status\-
 method=_
 
+[item13]
+section=commands
+caption=Git Status\Pull
+method=pull_
+
+[item14]
+section=commands
+caption=Git Status\-
+method=_
+
 [item20]
 section=commands
 caption=Git Status\Get log
@@ -98,10 +108,25 @@ method=push_
 
 [item53]
 section=commands
+caption=Git Status\View file changes
+method=diff_
+
+[item54]
+section=commands
+caption=Git Status\View all changes
+method=diff_all_
+
+[item55]
+section=commands
 caption=Git Status\-
 method=_
 
 [item60]
 section=commands
-caption=Git Status\Pull
-method=pull_
+caption=Git Status\Checkout branch...
+method=checkout_dlg_menu_
+
+[item61]
+section=commands
+caption=Git Status\Checkout new branch...
+method=checkout_new_branch_
