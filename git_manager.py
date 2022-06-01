@@ -44,7 +44,12 @@ class GitManager:
         error_text = stderrdata.decode('utf-8')
 
         # don't always show error_text, it may be normal message for 'push' action
-        if '\nfatal: ' in error_text:
+        if (
+            '\nfatal: ' in error_text or
+#            'error:' in error_text or
+            'overwritten by checkout:' in error_text or
+            "couldn't find remote" in error_text
+        ):
             print("NOTE: Git Status: ", error_text)
             self.lastError = error_text
 
