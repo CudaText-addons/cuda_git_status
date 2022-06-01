@@ -11,8 +11,10 @@ class GitManager:
         self.git = 'git'
         self.prefix = ''
         self.filename = ''
+        self.lastError = ''
 
     def run_git(self, args):
+        self.lastError = ''
         cmd = [self.git] + args
         cwd = self.getcwd()
         if os.name=='nt':
@@ -44,6 +46,7 @@ class GitManager:
         # don't always show error_text, it may be normal message for 'push' action
         if '\nfatal: ' in error_text:
             print("NOTE: Git Status: ", error_text)
+            self.lastError = error_text
 
         ''' #debug
         if stdoutdata:
