@@ -21,8 +21,8 @@ class GitManager:
             # make sure console does not come up
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            p = subprocess.Popen(cmd, 
-                                 stdin=subprocess.PIPE, 
+            p = subprocess.Popen(cmd,
+                                 stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  cwd=cwd,
@@ -31,8 +31,8 @@ class GitManager:
             my_env = os.environ.copy()
             my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
             my_env["LANG"] = "en_US"
-            p = subprocess.Popen(cmd, 
-                                 stdin=subprocess.PIPE, 
+            p = subprocess.Popen(cmd,
+                                 stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  cwd=cwd,
@@ -46,9 +46,8 @@ class GitManager:
         # don't always show error_text, it may be normal message for 'push' action
         if (
             '\nfatal: ' in error_text or
-#            'error:' in error_text or
-            'overwritten by checkout:' in error_text or
-            "couldn't find remote" in error_text
+            'error: The following untracked working tree files would be overwritten by checkout:' in error_text or
+            "fatal: couldn't find remote ref" in error_text
         ):
             print("NOTE: Git Status: ", error_text)
             self.lastError = error_text
