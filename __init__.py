@@ -279,6 +279,7 @@ class Command:
             if b.startswith('*'):
                 b = b[1:].strip()
                 m = menu_proc(self.h_menu_checkout, MENU_ADD, caption=b, command=callback.format(b))
+                menu_proc(m, MENU_SET_ENABLED, command=False)
                 menu_proc(m, MENU_SET_CHECKED, command=True)
                 menu_proc(m, MENU_SET_RADIOITEM, command=True)
             else:
