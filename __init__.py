@@ -285,7 +285,7 @@ class Command:
             else:
                 m = menu_proc(self.h_menu_checkout, MENU_ADD, caption=b, command=callback.format(b))
         menu_proc(self.h_menu_checkout, MENU_ADD, caption='-')
-        menu_proc(self.h_menu_checkout, MENU_ADD, caption='<new branch>', command='cuda_git_status.checkout_new_branch_')
+        menu_proc(self.h_menu_checkout, MENU_ADD, caption=_('<new branch>'), command='cuda_git_status.checkout_new_branch_')
 
         menu_proc(self.h_menu, MENU_SHOW)
 
