@@ -227,7 +227,7 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_commit       = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-            self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit (amend)...'), command='cuda_git_status.commit_amend_')
+            self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit/amend...'), command='cuda_git_status.commit_amend_')
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
             self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
