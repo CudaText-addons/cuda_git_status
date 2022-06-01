@@ -24,6 +24,7 @@ authors:
 - David Emanuel Santiago (@demanuel at GitHub)
 - Shovel (@halfbrained at GitHub)
 - Ildar Khasanshin (@ildarkhasanshin at GitHub)
+- Yuriy Balyuk (@veksha at GitHub)
 
 license: MIT
-icon from GitHub, license: MIT
+icon is from GitHub, license: MIT
