@@ -98,7 +98,7 @@ method=commit_
 
 [item51]
 section=commands
-caption=Git Status\Commit (amend)...
+caption=Git Status\Commit/amend...
 method=commit_amend_
 
 [item52]
