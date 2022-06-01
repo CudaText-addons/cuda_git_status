@@ -218,7 +218,7 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_status    = menu_proc(self.h_menu, MENU_ADD, caption=_('Get status'), command='cuda_git_status.get_status_')
-            self.h_menu_notstaged = menu_proc(self.h_menu, MENU_ADD, caption=_('Get not-staged files'), command='cuda_git_status.get_notstaged_files_')
+            self.h_menu_notstaged = menu_proc(self.h_menu, MENU_ADD, caption=_('Get non-staged files'), command='cuda_git_status.get_notstaged_files_')
             self.h_menu_untracked = menu_proc(self.h_menu, MENU_ADD, caption=_('Get untracked files'), command='cuda_git_status.get_untracked_files_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
@@ -244,7 +244,7 @@ class Command:
         list_notstaged = self.run_git(["diff", "--name-only"])
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
 
-        # 'not-staged', 'untracked'
+        # 'non-staged', 'untracked'
         menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
         menu_proc(self.h_menu_untracked, MENU_SET_ENABLED, command=bool(list_untracked))
 
@@ -422,7 +422,7 @@ class Command:
         if text:
             self.show_memo(text, _('Git: Changes not staged for commit'))
         else:
-            msg_status(_('Git: no not-staged files'))
+            msg_status(_('Git: no non-staged files'))
 
     def get_untracked_files_(self):
         text = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
