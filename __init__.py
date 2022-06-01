@@ -435,7 +435,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        txt_ = dlg_input('Git: Commit changes', '')
+        txt_ = dlg_input(_('Git: Commit changes'), '')
         if txt_:
             text = self.run_git(["commit", "-m", txt_])
             if text:
@@ -446,7 +446,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        txt_ = dlg_input('Git: Commit (amend) changes', '')
+        txt_ = dlg_input(_('Git: Commit/amend changes'), '')
         if txt_:
             text = self.run_git(["commit", "--amend", "-m", txt_])
             if text:
