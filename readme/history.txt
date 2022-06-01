@@ -1,7 +1,8 @@
 
-2022.05.31
+2022.06.01
++ add: 'pull' command suggests to choose an origin (by @veksha)
 + add: menu item "Checkout" with list of all branches + "new branch" item (by @veksha)
-+ add: show error message-box if 'fatal' Git error occurs 
++ add: show error message-box if 'fatal' Git error occurs (by @veksha)
 
 2022.05.29
 + add: menu items "View file changes" and "View all changes", which show diff in a dialog (by @veksha)
