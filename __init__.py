@@ -514,7 +514,7 @@ class Command:
 
         branch = gitmanager.branch()
         if branch == branch_to:
-            msg_box('Already on a "{}" branch.'.format(branch), MB_OK+MB_ICONINFO)
+            msg_box(_('Already on a "{}" branch.').format(branch), MB_OK+MB_ICONINFO)
             return
 
         self.run_git(["checkout",branch_to])
