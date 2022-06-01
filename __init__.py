@@ -450,8 +450,8 @@ class Command:
         if txt_:
             text = self.run_git(["commit", "--amend", "-m", txt_])
             if text:
-                self.show_memo(text, _('Git: Result of commit (amend)'))
-            self.request_update(ed, 'commited_amend')
+                self.show_memo(text, _('Git: Result of commit/amend'))
+            self.request_update(ed, 'commited_amended')
 
     def push_(self):
         if not self.is_git():
@@ -498,14 +498,14 @@ class Command:
 
         fn = ed.get_filename()
         diffs = self.run_git(["diff", "HEAD", fn])
-        DiffDialog().show_diff_dlg(diffs, _('Git: diff HEAD')+' "'+os.path.basename(fn)+'"')
+        DiffDialog().show_diff_dlg(diffs, 'Git: diff HEAD'+' "'+os.path.basename(fn)+'"')
 
     def diff_all_(self):
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
         diffs = self.run_git(["diff","HEAD"])
-        DiffDialog().show_diff_dlg(diffs, _('Git: diff HEAD'))
+        DiffDialog().show_diff_dlg(diffs, 'Git: diff HEAD')
 
     def checkout_(self, info):
         if not self.is_git():
