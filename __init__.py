@@ -475,11 +475,22 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        res = msg_box(_("Do you really want to run 'git pull'?"), MB_OKCANCEL+MB_ICONQUESTION)
+        remotes = self.run_git(['remote','show']).splitlines()
+        cap = _('Select a remote to pull from:')
+        index = dlg_menu(DMENU_LIST, remotes, caption=cap)
+        if index is None:
+            return
+
+        remote = remotes[index]
+        branch = gitmanager.branch()
+        res = msg_box(
+            _("Do you really want to run 'git pull {} {}'?".format(remote,branch)),
+            MB_OKCANCEL+MB_ICONQUESTION
+        )
         if res == ID_OK:
-            text = self.run_git(["pull"])
+            text = self.run_git(["pull",remote,branch])
             if text:
-                self.show_memo(text, _('Git: Result of pull'))
+                self.show_memo(text, _('Git: pull {} {}'.format(remote,branch)))
             self.request_update(ed, 'pulled')
 
     def diff_(self):
