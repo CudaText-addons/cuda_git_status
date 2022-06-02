@@ -489,7 +489,7 @@ class Command:
         if res == ID_OK:
             text = self.run_git(["pull",remote,branch])
             if text:
-                self.show_memo(text, 'Git: pull {} {}'.format(remote,branch))
+                self.show_memo(text, _('Git: pull {} {}').format(remote,branch))
             self.request_update(ed, 'pulled')
 
     def diff_(self):
