@@ -352,8 +352,8 @@ class Command:
     def run_git(self, params_):
         (exit_code, output) = gitmanager.run_git(params_)
 
-        if gitmanager.lastError:
-                msg_box(gitmanager.lastError, MB_OK+MB_ICONERROR)
+        if gitmanager.last_error:
+                msg_box(gitmanager.last_error, MB_OK+MB_ICONERROR)
 
         if exit_code != 0:
             return ''

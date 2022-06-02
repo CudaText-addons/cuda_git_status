@@ -11,10 +11,10 @@ class GitManager:
         self.git = 'git'
         self.prefix = ''
         self.filename = ''
-        self.lastError = ''
+        self.last_error = ''
 
     def run_git(self, args):
-        self.lastError = ''
+        self.last_error = ''
         cmd = [self.git] + args
         cwd = self.getcwd()
         if os.name=='nt':
@@ -53,7 +53,7 @@ class GitManager:
 #            "fatal: couldn't find remote ref" in error_text
         ):
             print("NOTE: Git Status: ", error_text)
-            self.lastError = error_text
+            self.last_error = error_text
 
         ''' #debug
         if stdoutdata:
