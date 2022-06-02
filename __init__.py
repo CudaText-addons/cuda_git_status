@@ -535,6 +535,10 @@ class Command:
 
         fn = ed.get_filename()
         diffs = self.run_git(["diff", "HEAD", fn])
+        if not diffs:
+            msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
+            return
+
         DiffDialog().show_diff_dlg(diffs, _('Git: diff for "{}"').format(os.path.basename(fn)))
 
     def diff_all_(self):
@@ -542,6 +546,10 @@ class Command:
             return msg_status(_('No Git repo'))
 
         diffs = self.run_git(["diff", "HEAD"])
+        if not diffs:
+            msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
+            return
+
         DiffDialog().show_diff_dlg(diffs, _('Git: diff'))
 
     def checkout_(self, info):
