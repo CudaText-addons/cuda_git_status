@@ -13,7 +13,7 @@ class GitManager:
         self.filename = ''
         self.last_error = ''
 
-    def run_git(self, args):
+    def run_git(self, args, silence_errors=False):
         self.last_error = ''
         cmd = [self.git] + args
         cwd = self.getcwd()
@@ -41,16 +41,12 @@ class GitManager:
         #p.wait() # makes deadlock if process gives lot of data
         stdoutdata, stderrdata = p.communicate()
         out_text = stdoutdata.decode('utf-8')
-        error_text = stderrdata.decode('utf-8')
+        error_text = stderrdata.decode('utf-8') if not silence_errors else ''
 
         # don't always show error_text, it may be normal message for 'push' action
         if (
             'fatal: ' in error_text or
             'error: ' in error_text
-#            'error: The following untracked working tree files would be overwritten by checkout:' in error_text or
-#            'error: Your local changes to the following files would be overwritten by checkout:' in error_text or
-#            'error: you need to resolve your current index first' in error_text or
-#            "fatal: couldn't find remote ref" in error_text
         ):
             print("NOTE: Git Status: ", error_text)
             self.last_error = error_text
@@ -105,7 +101,10 @@ class GitManager:
 
     def unpushed_info(self, branch):
         if branch:
-            (exit_code, output) = self.run_git(['rev-list', '--left-right', '--count', 'origin/'+branch+'...'+branch])
+            (exit_code, output) = self.run_git(
+                ['rev-list', '--left-right', '--count', 'origin/'+branch+'...'+branch],
+                silence_errors=True
+            )
             m = re.search(r"(\d+)\s+(\d+)", output)
             if m:
                 return (int(m.group(1)), int(m.group(2)))
