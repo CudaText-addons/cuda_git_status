@@ -108,15 +108,25 @@ method=push_
 
 [item53]
 section=commands
+caption=Git Status\Push (set upstream)
+method=push_set_upstream_
+
+[item54]
+section=commands
+caption=Git Status\Push (force)
+method=push_force_
+
+[item55]
+section=commands
 caption=Git Status\View file changes
 method=diff_
 
-[item54]
+[item56]
 section=commands
 caption=Git Status\View all changes
 method=diff_all_
 
-[item55]
+[item57]
 section=commands
 caption=Git Status\-
 method=_

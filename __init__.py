@@ -471,6 +471,43 @@ class Command:
             self.show_memo(text, _('Git: Result of push'))
         self.request_update(ed, 'pushed')
 
+    def push_set_upstream_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        remotes = self.run_git(['remote','show']).splitlines()
+        index = dlg_menu(DMENU_LIST, remotes, caption=_('Select a remote to push to'))
+        if index is None:
+            return
+
+        remote = remotes[index]
+        branch = gitmanager.branch()
+
+        res = msg_box(
+            _("Do you really want to run 'git push --set-upstream {} {}'?").format(remote,branch),
+            MB_OKCANCEL+MB_ICONQUESTION
+        )
+        if res == ID_OK:
+            text = self.run_git(["push",'--set-upstream',remote,branch])
+            if text:
+                self.show_memo(text, _('Git: push --set-upstream {} {}').format(remote,branch))
+            self.request_update(ed, 'pushed_set_upstream')
+
+    def push_force_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        res = msg_box(
+            _("Do you really want to run 'git push --force'?"),
+            MB_OKCANCEL+MB_ICONQUESTION
+        )
+        if res == ID_OK:
+            text = self.run_git(['push','--force'])
+            if text:
+                self.show_memo(text, _('Git: Result of push --force'))
+            self.request_update(ed, 'pushed_force')
+
+
     def pull_(self):
         if not self.is_git():
             return msg_status(_('No Git repo'))
