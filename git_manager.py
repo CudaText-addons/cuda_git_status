@@ -68,7 +68,7 @@ class GitManager:
         return cwd
 
     def branch(self):
-        (exit_code, output) = self.run_git(["status", "-u", "no"])
+        (exit_code, output) = self.run_git(["status", "-u", "no"], silence_errors=True)
         if exit_code != 0:
             return ''
         m = re.search(r"(?:at|branch)\s(.*?)\n",output)
