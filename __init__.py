@@ -633,7 +633,18 @@ class DiffDialog:
         ed0.set_prop(PROP_GUTTER_BM, False)
         ed0.set_text_all(diffs)
         ed0.set_prop(PROP_RO, True)
-        ed0.set_prop(PROP_LEXER_FILE, 'Diff')
+
+
+        if 'Diff' in lexer_proc(LEXER_GET_LEXERS, False):
+            ed0.set_prop(PROP_LEXER_FILE, 'Diff')
+        else:
+            n=dlg_proc(h, DLG_CTL_ADD, 'label')
+            dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_diff',
+                'cap': _('Install Diff lexer if you want to see colors.'),
+                'align': ALIGN_BOTTOM,
+                'sp_a': 10
+            })
 
         n=dlg_proc(h, DLG_CTL_ADD, 'button')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
