@@ -397,7 +397,7 @@ class Command:
     def get_log_(self):
         count = 100
         text = self.run_git([
-            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=%d'%count,
+            '--no-pager', 'log', '--pretty=format:%h  %s%d', '--max-count=%d'%count,
         ])
 
         if text:
@@ -409,7 +409,7 @@ class Command:
         count = 100
         filename_ = ed.get_filename()
         text = self.run_git([
-            '--no-pager', 'log', '--decorate=short', '--pretty=oneline', '--max-count=%d'%count,
+            '--no-pager', 'log', '--pretty=format:%h  %s%d', '--max-count=%d'%count,
             filename_])
 
         if text:
