@@ -534,7 +534,10 @@ class Command:
             return msg_status(_('No Git repo'))
 
         fn = ed.get_filename()
-        diffs = self.run_git(["diff", "HEAD", fn])
+        if gitmanager.commit_count() > 0:
+            diffs = self.run_git(["diff", "HEAD", fn])
+        else:
+            diffs = self.run_git(["diff", '--staged', fn])
         if not diffs:
             msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
             return
@@ -545,7 +548,10 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        diffs = self.run_git(["diff", "HEAD"])
+        if gitmanager.commit_count() > 0:
+            diffs = self.run_git(["diff", "HEAD"])
+        else:
+            diffs = self.run_git(["diff",'--staged'])
         if not diffs:
             msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
             return
