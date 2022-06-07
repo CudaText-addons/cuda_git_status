@@ -78,8 +78,14 @@ class GitManager:
             return ''
 
     def is_dirty(self):
-        (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"])
+        (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"], silence_errors=True)
         return exit_code == 1
+
+    def commit_count(self):
+        (exit_code, output) = self.run_git(["rev-list", "--count", "HEAD"], silence_errors=True)
+        if exit_code != 0:
+            return 0
+        return int(output)
 
     ### This code shows dirty state when we have untacked files, bad.
     #def is_dirty(self):
