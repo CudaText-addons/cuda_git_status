@@ -530,33 +530,33 @@ class Command:
             self.request_update(ed, 'pulled')
 
     def diff_(self):
-        if not self.is_git():
-            return msg_status(_('No Git repo'))
-
-        fn = ed.get_filename()
-        if gitmanager.commit_count() > 0:
-            diffs = self.run_git(["diff", "HEAD", fn])
-        else:
-            diffs = self.run_git(["diff", '--staged', fn])
-        if not diffs:
-            msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
-            return
-
-        DiffDialog().show_diff_dlg(diffs, _('Git: diff for "{}"').format(os.path.basename(fn)))
+        self.diff_ex(ed.get_filename())
 
     def diff_all_(self):
+        self.diff_ex('')
+
+    def diff_ex(self, fn):
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
         if gitmanager.commit_count() > 0:
-            diffs = self.run_git(["diff", "HEAD"])
+            params = ["diff", "HEAD"]
         else:
-            diffs = self.run_git(["diff",'--staged'])
+            params = ["diff", '--staged']
+        if fn:
+            params.append(fn)
+
+        diffs = self.run_git(params)
         if not diffs:
             msg_box(_('No Git changes'), MB_OK+MB_ICONINFO)
             return
 
-        DiffDialog().show_diff_dlg(diffs, _('Git: diff'))
+        if fn:
+            cap = _('Git: diff for "{}"').format(os.path.basename(fn))
+        else:
+            cap = _('Git: diff')
+
+        DiffDialog().show_diff_dlg(diffs, cap)
 
     def checkout_(self, info):
         if not self.is_git():
