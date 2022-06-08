@@ -641,6 +641,8 @@ class Command:
             p.wait()
         else:
             tool = 'gnome-terminal'
+            tool_args = ['--window', '--']
+            
             import shutil
             if not shutil.which(tool): # not in PATH
                 msg_box(_('Cannot find "{}"').format(tool), MB_OK+MB_ICONERROR)
@@ -665,7 +667,7 @@ class Command:
                 commit_hash = '--root' # using --root because initial commit has no parent
 
             import subprocess
-            p = subprocess.Popen([tool, '--window', '--', 'git', 'rebase', '-i', commit_hash],
+            p = subprocess.Popen([tool] + tool_args + ['git', 'rebase', '-i', commit_hash],
                                 cwd=gitmanager.getcwd()
                                 )
             p.wait()
