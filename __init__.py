@@ -616,23 +616,9 @@ class Command:
                 else:
                     return
 
-            commits = self.run_git(['log','--no-merges',
-                                    '--pretty=format:%h%<(11,trunc) %ar %s']).splitlines()
-            if len(commits) == 0:
+            commit_hash = self.commit_hash()
+            if not commit_hash:
                 return
-
-            index = dlg_menu(DMENU_LIST+DMENU_EDITORFONT, commits,
-                            caption=_('Select a starting commit'), w=700, h=500)
-            if index is None:
-                return
-            commit_hash = commits[index].split()[0]
-            initial_commit_hash = commits[-1].split()[0]
-            is_initial_commit = commit_hash == initial_commit_hash
-
-            if not is_initial_commit:
-                commit_hash += '~' # using parent's hash we include selected commit into the rebase list
-            else:
-                commit_hash = '--root' # using --root because initial commit has no parent
 
             import subprocess
             pause = 'read -p "\n'+_('press Enter to close...')+'"'
@@ -669,29 +655,35 @@ class Command:
                 msg_box(_('Cannot find terminal programs:\n\n{}').format('\n'.join(tool_list)), MB_OK+MB_ICONERROR)
                 return
 
-            commits = self.run_git(['log','--no-merges',
-                                    '--pretty=format:%h%<(11,trunc) %ar %s']).splitlines()
-            if len(commits) == 0:
+            commit_hash = self.commit_hash()
+            if not commit_hash:
                 return
-
-            index = dlg_menu(DMENU_LIST+DMENU_EDITORFONT, commits,
-                            caption=_('Select a starting commit'), w=700, h=500)
-            if index is None:
-                return
-            commit_hash = commits[index].split()[0]
-            initial_commit_hash = commits[-1].split()[0]
-            is_initial_commit = commit_hash == initial_commit_hash
-
-            if not is_initial_commit:
-                commit_hash += '~' # using parent's hash we include selected commit into the rebase list
-            else:
-                commit_hash = '--root' # using --root because initial commit has no parent
 
             import subprocess
             p = subprocess.Popen([tool] + tool_args + ['git', 'rebase', '-i', commit_hash],
                                 cwd=gitmanager.getcwd()
                                 )
             p.wait()
+
+    def commit_hash(self):
+        commits = self.run_git(['log','--no-merges',
+                                '--pretty=format:%h%<(11,trunc) %ar %s']).splitlines()
+        if len(commits) == 0:
+            return
+
+        index = dlg_menu(DMENU_LIST+DMENU_EDITORFONT, commits,
+                        caption=_('Select a starting commit'), w=700, h=500)
+        if index is None:
+            return
+        commit_hash = commits[index].split()[0]
+        initial_commit_hash = commits[-1].split()[0]
+        is_initial_commit = commit_hash == initial_commit_hash
+
+        if not is_initial_commit:
+            commit_hash += '~' # using parent's hash we include selected commit into the rebase list
+        else:
+            commit_hash = '--root' # using --root because initial commit has no parent
+        return commit_hash
 
 
 class DiffDialog:
