@@ -642,7 +642,7 @@ class Command:
                     break
 
             if not tool:
-                msg_box(_('Cannot find terminal programs:\n\n{}').format('\n'.join(tool_list)), MB_OK+MB_ICONERROR)
+                msg_box(_('Cannot find terminal programs:')+'\n\n'+'\n'.join(tool_list), MB_OK+MB_ICONERROR)
                 return
 
             commit_hash = self.commit_hash()
