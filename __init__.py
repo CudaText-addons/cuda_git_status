@@ -627,28 +627,18 @@ class Command:
             p.wait()
         else:
             TOOLS = [
-              {
-                'tool': 'gnome-terminal',
-                'args': ['--window', '--']
-              },
-              {
-                'tool': 'xterm',
-                'args': ['-hold', '-e']
-              },
+              ['gnome-terminal', '--window', '--'],
+              ['xterm', '-hold', '-e']
               ]
 
             tool = None
-            tool_args = None
             tool_list = []
 
             import shutil
             for t in TOOLS:
-                tmp_tool = t['tool']
-                tmp_args = t['args']
-                tool_list.append(tmp_tool)
-                if shutil.which(tmp_tool):
-                    tool = tmp_tool
-                    tool_args = tmp_args
+                tool_list.append(t[0])
+                if shutil.which(t[0]):
+                    tool = t
                     break
 
             if not tool:
@@ -660,7 +650,7 @@ class Command:
                 return
 
             import subprocess
-            p = subprocess.Popen([tool] + tool_args + ['git', 'rebase', '-i', commit_hash],
+            p = subprocess.Popen(tool + ['git', 'rebase', '-i', commit_hash],
                                 cwd=gitmanager.getcwd()
                                 )
             p.wait()
