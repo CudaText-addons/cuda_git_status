@@ -97,6 +97,7 @@ class Command:
 
         self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
         gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
+        self.git_bash_exe = ini_read(fn_config, 'git_status', 'git_bash_exe', 'git-bash.exe')
         self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
 
         global DLG_W
@@ -112,6 +113,7 @@ class Command:
 
         ini_write(fn_config, 'git_status', 'white_icon', '1' if self.white_icon else '0')
         ini_write(fn_config, 'git_status', 'git_program', gitmanager.git)
+        ini_write(fn_config, 'git_status', 'git_bash_exe', self.git_bash_exe)
         ini_write(fn_config, 'git_status', 'decor_style', self.decor_style)
 
         global DLG_W
@@ -595,6 +597,50 @@ class Command:
 
         self.run_git(["checkout",branch_to])
         self.request_update(ed, 'checked_out')
+
+    def rebase_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        IS_WIN = os.name=='nt'
+        if IS_WIN:
+            tool = self.git_bash_exe
+            # check for git-bash.exe in PATH
+            import shutil
+            if not shutil.which(tool): # not in PATH
+                file_path = dlg_file(True, 'git-bash.exe', '', 'git-bash.exe|git-bash.exe',
+                                    _('Please, provide path to git-bash.exe'))
+                if file_path:
+                    self.git_bash_exe = tool = file_path
+                    self.save_ops()
+                else:
+                    return
+
+            commits = self.run_git(['log','--no-merges',
+                                    '--pretty=format:%h%<(11,trunc) %ar %s']).splitlines()
+            if len(commits) == 0:
+                return
+
+            index = dlg_menu(DMENU_LIST+DMENU_EDITORFONT, commits,
+                            caption=_('Select a starting commit'), w=700, h=500)
+            if index is None:
+                return
+            commit_hash = commits[index].split()[0]
+            initial_commit_hash = commits[-1].split()[0]
+            is_initial_commit = commit_hash == initial_commit_hash
+
+            if not is_initial_commit:
+                commit_hash += '~' # using parent's hash we include selected commit into the rebase list
+            else:
+                commit_hash = '--root' # using --root because initial commit has no parent
+
+            import subprocess
+            pause = 'read -p "\n'+_('press Enter to close...')+'"'
+            p = subprocess.Popen([tool, '-c', 'git rebase -i '+commit_hash+' ; '+pause],
+                                cwd=gitmanager.getcwd())
+            p.wait()
+        else:
+            msg_box(_('Not implemented'),MB_OK)
 
 
 class DiffDialog:
