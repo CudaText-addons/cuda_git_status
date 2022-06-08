@@ -140,3 +140,9 @@ method=checkout_dlg_menu_
 section=commands
 caption=Git Status\Checkout new branch...
 method=checkout_new_branch_
+
+[item62]
+section=commands
+caption=Git Status\Rebase (interactive)
+method=rebase_
+
