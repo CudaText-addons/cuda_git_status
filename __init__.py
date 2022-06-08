@@ -640,12 +640,33 @@ class Command:
                                 cwd=gitmanager.getcwd())
             p.wait()
         else:
-            tool = 'gnome-terminal'
-            tool_args = ['--window', '--']
-            
+            TOOLS = [
+              {
+                'tool': 'gnome-terminal',
+                'args': ['--window', '--']
+              },
+              {
+                'tool': 'xterm',
+                'args': ['-hold', '-e']
+              },
+              ]
+
+            tool = None
+            tool_args = None
+            tool_list = []
+
             import shutil
-            if not shutil.which(tool): # not in PATH
-                msg_box(_('Cannot find "{}"').format(tool), MB_OK+MB_ICONERROR)
+            for t in TOOLS:
+                tmp_tool = t['tool']
+                tmp_args = t['args']
+                tool_list.append(tmp_tool)
+                if shutil.which(tmp_tool):
+                    tool = tmp_tool
+                    tool_args = tmp_args
+                    break
+
+            if not tool:
+                msg_box(_('Cannot find terminal programs:\n\n{}').format('\n'.join(tool_list)), MB_OK+MB_ICONERROR)
                 return
 
             commits = self.run_git(['log','--no-merges',
