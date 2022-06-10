@@ -239,7 +239,7 @@ class Command:
 
 
         fn = ed.get_filename()
-        fn_rel = git_relative_path(fn)
+        fn_rel = git_relative_path(fn).replace(os.path.sep, '/') # convert Windows-style path separators to Unix-style (used in git)
         branch = gitmanager.branch()
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
