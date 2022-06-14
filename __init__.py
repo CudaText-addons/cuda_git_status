@@ -243,8 +243,12 @@ class Command:
         branch = gitmanager.branch()
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
+        
         list_notstaged = self.run_git(["diff", "--name-only"])
-        list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others"])
+            # list contains full paths (relative)
+        list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others", "--full-name"])
+            # --full-name is needed to have full paths
+            # so we have 2 lists, with full paths, then we do "if fn_rel in xxxx"
 
         # 'non-staged', 'untracked'
         menu_proc(self.h_menu_notstaged, MENU_SET_ENABLED, command=bool(list_notstaged))
