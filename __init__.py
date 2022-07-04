@@ -243,7 +243,7 @@ class Command:
         branch = gitmanager.branch()
         diffs = bool(gitmanager.diff(fn))
         dirty = gitmanager.is_dirty()
-        
+
         list_notstaged = self.run_git(["diff", "--name-only"])
             # list contains full paths (relative)
         list_untracked = self.run_git(["ls-files", ".", "--exclude-standard", "--others", "--full-name"])
@@ -366,13 +366,43 @@ class Command:
         return output
 
     def show_memo(self, text, caption):
-        output_ = text.replace("\n", "\r")
-        c1 = chr(1)
-        text_ = '\n'.join([]
-            +[c1.join(['type=memo', 'val='+output_, 'pos=%d,%d,%d,%d'%(6, 6, DLG_W-6, DLG_H-6*2-25), 'ex0=1', 'ex1=1'])]
-            +[c1.join(['type=button', 'pos=%d,%d,%d,0'%(DLG_W-100, DLG_H-6-25, DLG_W-6), 'ex0=1', 'cap='+_('&OK')])]
-        )
-        dlg_custom(caption, DLG_W, DLG_H, text_, focused=1)
+
+        h = dlg_proc(0, DLG_CREATE)
+        dlg_proc(h, DLG_PROP_SET, prop={
+            'w': DLG_W,
+            'h': DLG_H,
+            'cap': caption,
+            'border': DBORDER_DIALOG,
+        })
+
+        n = dlg_proc(h, DLG_CTL_ADD, prop='memo')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'memo_log',
+            'val': text.replace("\n", "\r"),
+            'x': 6,
+            'y': 6,
+            'w': DLG_W-6*2,
+            'h': DLG_H-6*3-25,
+            'ex0': 1,
+            'ex1': 1,
+        })
+
+        n = dlg_proc(h, DLG_CTL_ADD, prop='button')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'btn_ok',
+            'x': DLG_W-100,
+            'y': DLG_H-6-25,
+            'w': 100-6,
+            'cap': _('&OK'),
+            'on_change': 'module=cuda_git_status;cmd=callback_button_ok;',
+        })
+
+        dlg_proc(h, DLG_SHOW_MODAL)
+        dlg_proc(h, DLG_FREE)
+
+    def callback_button_ok(self, id_dlg, id_ctl, data='', info=''):
+
+        dlg_proc(id_dlg, DLG_HIDE)
 
     def get_status_(self):
         text = self.run_git(["status"])
