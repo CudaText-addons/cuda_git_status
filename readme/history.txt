@@ -1,3 +1,7 @@
+
+2022.07.04
++ add: change usage of API dlg_custom -> dlg_proc
+
 2022.06.14
 - fix: "Add file..." menu item was incorrecly disabled for files in subdirs (by @veksha)
 
