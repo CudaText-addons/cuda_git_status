@@ -375,18 +375,6 @@ class Command:
             'border': DBORDER_DIALOG,
         })
 
-        n = dlg_proc(h, DLG_CTL_ADD, prop='memo')
-        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
-            'name': 'memo_log',
-            'val': text.replace("\n", "\r"),
-            'x': 6,
-            'y': 6,
-            'w': DLG_W-6*2,
-            'h': DLG_H-6*3-25,
-            'ex0': 1,
-            'ex1': 1,
-        })
-
         n = dlg_proc(h, DLG_CTL_ADD, prop='button')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
             'name': 'btn_ok',
@@ -395,6 +383,19 @@ class Command:
             'w': 100-6,
             'cap': _('&OK'),
             'on_change': 'module=cuda_git_status;cmd=callback_button_ok;',
+            'ex0': True,
+        })
+
+        n = dlg_proc(h, DLG_CTL_ADD, prop='memo')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'memo_log',
+            'val': text.replace("\n", "\r"),
+            'x': 6,
+            'y': 6,
+            'w': DLG_W-6*2,
+            'h': DLG_H-6*3-25,
+            'ex0': True,
+            'ex1': True,
         })
 
         dlg_proc(h, DLG_SHOW_MODAL)
