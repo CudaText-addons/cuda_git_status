@@ -1,4 +1,7 @@
 
+2022.07.25
+- fix: supress Unicode-decode error for non-UTF8 files
+
 2022.07.04
 + add: change usage of API dlg_custom -> dlg_proc
 

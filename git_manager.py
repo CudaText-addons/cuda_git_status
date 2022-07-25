@@ -40,8 +40,8 @@ class GitManager:
 
         #p.wait() # makes deadlock if process gives lot of data
         stdoutdata, stderrdata = p.communicate()
-        out_text = stdoutdata.decode('utf-8')
-        error_text = stderrdata.decode('utf-8') if not silence_errors else ''
+        out_text = stdoutdata.decode('utf-8', errors='replace')
+        error_text = stderrdata.decode('utf-8', errors='replace') if not silence_errors else ''
 
         # don't always show error_text, it may be normal message for 'push' action
         if (
