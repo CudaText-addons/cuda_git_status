@@ -11,7 +11,7 @@ _ = get_translation(__file__)  # I18N
 
 CELL_TAG_INFO = 20 # CudaText tag of last statusbar cell, we insert our cell before it
 CELL_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
-BAR_H = 'main'
+BAR_H = app_proc(PROC_GET_MAIN_STATUSBAR, '')
 DLG_W = 700
 DLG_H = 400
 TIMERCALL = 'cuda_git_status.on_timer'
@@ -65,16 +65,22 @@ class Command:
     def init_bar_cell(self):
 
         # insert our cell before "info" cell
-        index = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG_INFO)
-        if index is None:
+        index_info = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG_INFO)
+        if index_info is None:
             return False
 
         index_new = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG)
         if index_new is None:
-            statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index, tag=CELL_TAG)
+            statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index_info, tag=CELL_TAG)
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=True)
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
+            index_new = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG)
+
+        # app config was reloaded, and Git cell was moved to 0 - then move it
+        if app_api_version()>='1.0.430':
+            if index_new==0:
+                statusbar_proc(BAR_H, STATUSBAR_MOVE_CELL, index=index_new, value=index_info-1)
 
         return True
 
@@ -318,6 +324,9 @@ class Command:
         elif state in [APPSTATE_SESSION_LOAD_FAIL, APPSTATE_SESSION_LOAD]: # ended
             self.is_loading_sesh = False
             self.request_update(ed, 'session loaded')
+
+        elif state == APPSTATE_CONFIG_REREAD:
+            self.init_bar_cell()
 
     def get_caret_y(self):
         return ed.get_carets()[0][1] + 1
