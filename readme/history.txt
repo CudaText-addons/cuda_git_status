@@ -1,4 +1,7 @@
 
+2022.09.17
++ add: under CudaText 1.171+, plugin handles situation 'app config was reloaded' and moves Git-cell to righter OK position
+
 2022.07.25
 - fix: supress Unicode-decode error for non-UTF8 files
 
