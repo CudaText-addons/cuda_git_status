@@ -152,13 +152,13 @@ class GitManager:
         return lines_
 
     def badge(self, filename):
-        self.filename = filename
-        if not self.filename:
+        if not filename:
             return ""
         if not os.path.isfile(filename):
             return ""
 
-        self.diff(self.filename)
+        self.filename = filename
+        self.diff(filename)
 
         branch = self.branch()
         if not branch:
