@@ -1,4 +1,7 @@
 
+2022.10.12
+- fix: if untitled tab is opened on startup, plugin could show error "not a git reposotiry" (by @veksha)
+
 2022.09.17
 + add: under CudaText 1.171+, plugin handles situation 'app config was reloaded' and moves Git-cell to righter OK position
 
