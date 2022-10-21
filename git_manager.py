@@ -3,6 +3,7 @@ import re
 import subprocess
 from cudatext import *
 
+LOG = False
 MY_DECOR_COLOR = 0xFF
 DIFF_TAG = app_proc(PROC_GET_UNIQUE_TAG, '')
 
@@ -156,6 +157,10 @@ class GitManager:
             return ""
         if not os.path.isfile(filename):
             return ""
+        if filename != ed.get_filename():
+            return
+            
+        pass;       LOG and print("getting badge:", filename)
 
         self.filename = filename
         self.diff(filename)
