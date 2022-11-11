@@ -34,17 +34,21 @@ def git_relative_path(fn):
 
 def gitman_loop(q_fns, q_badges):
     while True:
-        fn = q_fns.get()    # wait for request
-        is_getting_badge.set()
-        while not q_fns.empty():    # get last if have multiple requests
-            fn = q_fns.get()
-
-        #if fn is None:
-            #return
-
-        _badge = gitmanager.badge(fn)
-        q_badges.put((fn, _badge))
-        is_getting_badge.clear()
+        try:
+            fn = q_fns.get()    # wait for request
+            is_getting_badge.set()
+            while not q_fns.empty():    # get last if have multiple requests
+                fn = q_fns.get()
+    
+            #if fn is None:
+                #return
+    
+            _badge = gitmanager.badge(fn)
+            q_badges.put((fn, _badge))
+            is_getting_badge.clear()
+        except Exception as e:
+            print('ERROR: Git Status: {}'.format(e))
+            break
 #end Threaded
 
 class Command:
@@ -171,7 +175,12 @@ class Command:
         """ * check if thread returned new badge
             * stop timer if thread is done
         """
-
+        
+        # stop timer if thread is not alive (that means exception occurred)
+        if not self.t_gitman.is_alive():
+            timer_proc(TIMER_STOP, TIMERCALL, 0)
+            return
+        
         _fn, _badge = self.badge_results.get()
         self.update(_fn, _badge)
 

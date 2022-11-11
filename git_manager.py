@@ -15,49 +15,52 @@ class GitManager:
         self.last_error = ''
 
     def run_git(self, args, silence_errors=False):
-        self.last_error = ''
-        cmd = [self.git] + args
-        cwd = self.getcwd()
-        if os.name=='nt':
-            # make sure console does not come up
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            p = subprocess.Popen(cmd,
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 cwd=cwd,
-                                 startupinfo=startupinfo)
-        else:
-            my_env = os.environ.copy()
-            my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
-            my_env["LANG"] = "en_US"
-            p = subprocess.Popen(cmd,
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 cwd=cwd,
-                                 env=my_env)
-
-        #p.wait() # makes deadlock if process gives lot of data
-        stdoutdata, stderrdata = p.communicate()
-        out_text = stdoutdata.decode('utf-8', errors='replace')
-        error_text = stderrdata.decode('utf-8', errors='replace') if not silence_errors else ''
-
-        # don't always show error_text, it may be normal message for 'push' action
-        if (
-            'fatal: ' in error_text or
-            'error: ' in error_text
-        ):
-            print("NOTE: Git Status: ", error_text)
-            self.last_error = error_text
-
-        ''' #debug
-        if stdoutdata:
-            print('Git for:', repr(args), ', gets:', stdoutdata)
-        else:
-            print('Git fails:', repr(args))
-        '''
+        try:
+            self.last_error = ''
+            cmd = [self.git] + args
+            cwd = self.getcwd()
+            if os.name=='nt':
+                # make sure console does not come up
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                p = subprocess.Popen(cmd,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE,
+                                     cwd=cwd,
+                                     startupinfo=startupinfo)
+            else:
+                my_env = os.environ.copy()
+                my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
+                my_env["LANG"] = "en_US"
+                p = subprocess.Popen(cmd,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE,
+                                     cwd=cwd,
+                                     env=my_env)
+    
+            #p.wait() # makes deadlock if process gives lot of data
+            stdoutdata, stderrdata = p.communicate()
+            out_text = stdoutdata.decode('utf-8', errors='replace')
+            error_text = stderrdata.decode('utf-8', errors='replace') if not silence_errors else ''
+    
+            # don't always show error_text, it may be normal message for 'push' action
+            if (
+                'fatal: ' in error_text or
+                'error: ' in error_text
+            ):
+                print("NOTE: Git Status: ", error_text)
+                self.last_error = error_text
+    
+            ''' #debug
+            if stdoutdata:
+                print('Git for:', repr(args), ', gets:', stdoutdata)
+            else:
+                print('Git fails:', repr(args))
+            '''
+        except Exception as e:
+            raise Exception('{}, command: {}'.format(e, ' '.join(cmd)))
 
         return (p.returncode, out_text)
 
