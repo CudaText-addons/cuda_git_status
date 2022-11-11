@@ -1,3 +1,5 @@
+2022.11.11
+- fix: avoid editor hanging, if Git path is wrong (by @veksha)
 
 2022.10.12
 - fix: if untitled tab is opened on startup, plugin could show error "not a git reposotiry" (by @veksha)
