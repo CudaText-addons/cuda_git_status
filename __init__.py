@@ -448,6 +448,7 @@ class Command:
             text = self.run_git(["restore", filename_])
             if text:
                 self.show_memo(text, _('Git: Log of restore file'))
+            self.request_update(ed, 'restored')
 
     def get_log_(self):
         count = 100
