@@ -81,9 +81,9 @@ class Command:
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
             index_new = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG)
 
-        # app config was reloaded, and Git cell was moved to 0 - then move it
+        # config was reloaded, and Git cell was moved to 0 or 1 (1 with VimMode plugin); then move it
         if app_api_version()>='1.0.430':
-            if index_new==0:
+            if index_new<2:
                 statusbar_proc(BAR_H, STATUSBAR_MOVE_CELL, index=index_new, value=index_info-1)
 
         return True
