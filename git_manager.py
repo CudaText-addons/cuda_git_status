@@ -19,6 +19,9 @@ class GitManager:
             self.last_error = ''
             cmd = [self.git] + args
             cwd = self.getcwd()
+            my_env = os.environ.copy()
+            # removing GIT environment vars if any, they are interfering with our git calls
+            my_env = { k:v for k,v in my_env.items() if not k.upper().startswith('GIT_') }
             if os.name=='nt':
                 # make sure console does not come up
                 startupinfo = subprocess.STARTUPINFO()
@@ -28,9 +31,9 @@ class GitManager:
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE,
                                      cwd=cwd,
-                                     startupinfo=startupinfo)
+                                     startupinfo=startupinfo,
+                                     env=my_env)
             else:
-                my_env = os.environ.copy()
                 my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
                 my_env["LANG"] = "en_US"
                 p = subprocess.Popen(cmd,
