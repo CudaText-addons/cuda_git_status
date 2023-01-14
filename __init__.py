@@ -40,14 +40,12 @@ def gitman_loop(q_fns, q_badges):
             while not q_fns.empty():    # get last if have multiple requests
                 fn = q_fns.get()
     
-            #if fn is None:
-                #return
-    
             _badge = gitmanager.badge(fn)
             q_badges.put((fn, _badge))
             is_getting_badge.clear()
         except Exception as e:
             print('ERROR: Git Status: {}'.format(e))
+            q_badges.put((None, None)) # put None (to avoid blocking inside `on_timer`)
             break
 #end Threaded
 
@@ -55,8 +53,8 @@ class Command:
     def __init__(self):
 
         self.is_loading_sesh = False # to ignore 'on_open()' while loading session
-        self.badge_requests = None
-        self.badge_results = None
+        self.badge_requests = Queue()
+        self.badge_results = Queue()
         self.t_gitman = None
 
         self._last_request = None
@@ -146,10 +144,8 @@ class Command:
         if self.is_loading_sesh:
             return
 
-        if self.t_gitman is None:
-            self.badge_requests = Queue()
-            self.badge_results = Queue()
-
+        # start (or restart) thread if not already started
+        if self.t_gitman is None or not self.t_gitman.is_alive():
             self.t_gitman = Thread(
                     target=gitman_loop,
                     args=(self.badge_requests, self.badge_results),
@@ -175,20 +171,24 @@ class Command:
         """ * check if thread returned new badge
             * stop timer if thread is done
         """
+        def stop(): timer_proc(TIMER_STOP, TIMERCALL, 0)
         
         # stop timer if thread is not alive (that means exception occurred)
         if not self.t_gitman.is_alive():
-            timer_proc(TIMER_STOP, TIMERCALL, 0)
+            stop()
             return
         
         _fn, _badge = self.badge_results.get()
+        if (_fn, _badge) == (None, None): # means exception occurred
+            stop()
+            return
         self.update(_fn, _badge)
 
         # stop
         if self.badge_requests.empty() \
                 and self.badge_results.empty() \
                 and not is_getting_badge.is_set():
-            timer_proc(TIMER_STOP, TIMERCALL, 0)
+            stop()
 
     def update(self, fn, badge):
 
