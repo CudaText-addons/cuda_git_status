@@ -194,6 +194,7 @@ class Command:
                 return
             self.update(_fn, _badge)
         except:
+            time.sleep(0.01) # give cpu time to other thread, improves git status speed a little
             return
         ## --<
 
