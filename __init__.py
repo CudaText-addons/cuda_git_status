@@ -178,11 +178,25 @@ class Command:
             stop()
             return
         
-        _fn, _badge = self.badge_results.get()
-        if (_fn, _badge) == (None, None): # means exception occurred
-            stop()
+        ## --> "wait" version (slows down Main Thread, causes stuttering)
+            #_fn, _badge = self.badge_results.get()
+            #if (_fn, _badge) == (None, None): # means exception occurred
+                #stop()
+                #return
+            #self.update(_fn, _badge)
+        ## --<
+        
+        ## --> "NOwait" version (Main Thread is happy)
+        try:
+            _fn, _badge = self.badge_results.get_nowait()
+            if (_fn, _badge) == (None, None): # means exception occurred
+                stop()
+                return
+            self.update(_fn, _badge)
+        except:
+            time.sleep(0.01) # give cpu time to other thread, improves git status speed a little
             return
-        self.update(_fn, _badge)
+        ## --<
 
         # stop
         if self.badge_requests.empty() \
