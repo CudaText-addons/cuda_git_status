@@ -8,7 +8,7 @@ api=1.0.420
 
 [item1]
 section=events
-events=on_open,on_save,on_focus~,on_state,on_change_slow~
+events=on_open,on_save,on_focus~,on_state~,on_change_slow~
 
 [item2]
 section=commands
