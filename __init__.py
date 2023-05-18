@@ -804,7 +804,7 @@ class DiffDialog:
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
             'name': 'btn_close',
             'cap': _('Close'),
-            'w': 120,
+            'w': 100,
             'a_l': None,
             'a_t': None,
             'a_b': ('', ']'),
