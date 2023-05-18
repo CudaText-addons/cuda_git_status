@@ -430,7 +430,7 @@ class Command:
             'ex1': True,
         })
 
-        dlg_proc(h, DLG_FOCUS, name='btn_ok')
+        dlg_proc(h, DLG_CTL_FOCUS, name='btn_ok')
         dlg_proc(h, DLG_SHOW_MODAL)
         dlg_proc(h, DLG_FREE)
 
