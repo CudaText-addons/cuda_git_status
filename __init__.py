@@ -457,7 +457,7 @@ class Command:
             return msg_status(_('No Git repo'))
 
         filename_ = ed.get_filename()
-        res = msg_box(_("Do you really want to restore this file?"), MB_OKCANCEL+MB_ICONQUESTION)
+        res = msg_box(_("Do you REALLY want to restore this file?"), MB_OKCANCEL+MB_ICONWARNING)
         if res == ID_OK:
             text = self.run_git(["restore", filename_])
             if text:
