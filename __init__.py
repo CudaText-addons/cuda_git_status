@@ -73,9 +73,11 @@ class Command:
 
         index_new = statusbar_proc(BAR_H, STATUSBAR_FIND_CELL, value=CELL_TAG)
         if index_new is None:
-            old_color = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_COLOR_BACK, tag=CELL_TAG_INFO)
+            old_color_back = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_COLOR_BACK, tag=CELL_TAG_INFO)
+            old_color_font = statusbar_proc(BAR_H, STATUSBAR_GET_CELL_COLOR_FONT, tag=CELL_TAG_INFO)
             statusbar_proc(BAR_H, STATUSBAR_ADD_CELL, index=index_info, tag=CELL_TAG)
-            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_COLOR_BACK, tag=CELL_TAG, value=old_color)
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_COLOR_BACK, tag=CELL_TAG, value=old_color_back)
+            statusbar_proc(BAR_H, STATUSBAR_SET_CELL_COLOR_FONT, tag=CELL_TAG, value=old_color_font)
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_ALIGN, tag=CELL_TAG, value='C')
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_AUTOSIZE, tag=CELL_TAG, value=True)
             statusbar_proc(BAR_H, STATUSBAR_SET_CELL_CALLBACK, tag=CELL_TAG, value='module=cuda_git_status;cmd=callback_statusbar_click;')
