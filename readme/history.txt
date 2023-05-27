@@ -1,3 +1,6 @@
+2023.05.28
+- fix: properly set back-color of Git statusbar cell if Vim Mode plugin is also used
+
 2022.11.11
 - fix: avoid editor hanging, if Git path is wrong (by @veksha)
 
