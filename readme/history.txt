@@ -1,3 +1,7 @@
+2023.12.16
++ add: save/restore sizes of Diff dialog
++ add: command 'Config' scrolls to plugin's section
+
 2023.05.28
 - fix: properly set back-color of Git statusbar cell if Vim Mode plugin is also used
 
