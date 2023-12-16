@@ -137,9 +137,16 @@ class Command:
     def open_config(self):
 
         self.save_ops()
-        if os.path.isfile(fn_config):
-            file_open(fn_config)
+        if not os.path.isfile(fn_config):
+            return
+        file_open(fn_config)
 
+        lines = [ed.get_text_line(i) for i in range(ed.get_line_count())]
+        try:
+            index = lines.index('['+SECTION+']')
+            ed.set_caret(0, index)
+        except:
+            pass
 
     def request_update(self, ed_self, _reason):
         """ * send request to badge-thread
@@ -820,7 +827,6 @@ class DiffDialog:
             'sp_a': 6,
             'on_change': self.callback_btn_close,
             })
-
 
         #set line states
         for i in range(ed0.get_line_count()):
