@@ -764,7 +764,7 @@ class DiffDialog:
             'cap': caption,
             'w': 900,
             'h': 500,
-            'resize': True,
+            'border': DBORDER_SIZE,
             'keypreview': True,
 #            'on_close': lambda *args, **vargs: timer_proc(TIMER_START_ONE, self.close_diff_dlg, 200)
             })
