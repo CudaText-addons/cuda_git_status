@@ -761,10 +761,13 @@ class DiffDialog:
         h=dlg_proc(0, DLG_CREATE)
         self.h_dlg = h
 
+        form_w = int(ini_read(fn_config, SECTION, 'dialog_diff_w', '800'))
+        form_h = int(ini_read(fn_config, SECTION, 'dialog_diff_h', '500'))
+
         dlg_proc(h, DLG_PROP_SET, prop={
             'cap': caption,
-            'w': 900,
-            'h': 500,
+            'w': form_w,
+            'h': form_h,
             'border': DBORDER_SIZE,
             'keypreview': True,
 #            'on_close': lambda *args, **vargs: timer_proc(TIMER_START_ONE, self.close_diff_dlg, 200)
@@ -831,6 +834,13 @@ class DiffDialog:
 
 #        dlg_proc(h, DLG_CTL_FOCUS, name='ed')
         dlg_proc(h, DLG_SHOW_MODAL)
+
+        props = dlg_proc(h, DLG_PROP_GET)
+        form_w = props['w']
+        form_h = props['h']
+        ini_write(fn_config, SECTION, 'dialog_diff_w', str(form_w))
+        ini_write(fn_config, SECTION, 'dialog_diff_h', str(form_h))
+
         dlg_proc(h, DLG_FREE)
         self.h_dlg = None
 
