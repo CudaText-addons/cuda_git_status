@@ -17,6 +17,7 @@ DLG_H = 400
 TIMERCALL = 'cuda_git_status.on_timer'
 
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
+SECTION = 'git_status'
 
 ### Threaded
 is_getting_badge = Event()
@@ -107,15 +108,15 @@ class Command:
 
     def load_ops(self):
 
-        self.white_icon = ini_read(fn_config, 'git_status', 'white_icon', '0') == '1'
-        gitmanager.git = ini_read(fn_config, 'git_status', 'git_program', 'git')
-        self.git_bash_exe = ini_read(fn_config, 'git_status', 'git_bash_exe', 'git-bash.exe')
-        self.decor_style = ini_read(fn_config, 'git_status', 'decor_style', 'LightBG3')
+        self.white_icon = ini_read(fn_config, SECTION, 'white_icon', '0') == '1'
+        gitmanager.git = ini_read(fn_config, SECTION, 'git_program', 'git')
+        self.git_bash_exe = ini_read(fn_config, SECTION, 'git_bash_exe', 'git-bash.exe')
+        self.decor_style = ini_read(fn_config, SECTION, 'decor_style', 'LightBG3')
 
         global DLG_W
         global DLG_H
-        DLG_W = int(ini_read(fn_config, 'git_status', 'dialog_w', str(DLG_W)))
-        DLG_H = int(ini_read(fn_config, 'git_status', 'dialog_h', str(DLG_H)))
+        DLG_W = int(ini_read(fn_config, SECTION, 'dialog_w', str(DLG_W)))
+        DLG_H = int(ini_read(fn_config, SECTION, 'dialog_h', str(DLG_H)))
 
         d = app_proc(PROC_THEME_SYNTAX_DICT_GET, '')
         if self.decor_style in d:
@@ -123,15 +124,15 @@ class Command:
 
     def save_ops(self):
 
-        ini_write(fn_config, 'git_status', 'white_icon', '1' if self.white_icon else '0')
-        ini_write(fn_config, 'git_status', 'git_program', gitmanager.git)
-        ini_write(fn_config, 'git_status', 'git_bash_exe', self.git_bash_exe)
-        ini_write(fn_config, 'git_status', 'decor_style', self.decor_style)
+        ini_write(fn_config, SECTION, 'white_icon', '1' if self.white_icon else '0')
+        ini_write(fn_config, SECTION, 'git_program', gitmanager.git)
+        ini_write(fn_config, SECTION, 'git_bash_exe', self.git_bash_exe)
+        ini_write(fn_config, SECTION, 'decor_style', self.decor_style)
 
         global DLG_W
         global DLG_H
-        ini_write(fn_config, 'git_status', 'dialog_w', str(DLG_W))
-        ini_write(fn_config, 'git_status', 'dialog_h', str(DLG_H))
+        ini_write(fn_config, SECTION, 'dialog_w', str(DLG_W))
+        ini_write(fn_config, SECTION, 'dialog_h', str(DLG_H))
 
     def open_config(self):
 
