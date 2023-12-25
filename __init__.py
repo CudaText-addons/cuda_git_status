@@ -270,7 +270,8 @@ class Command:
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_commit       = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
-            self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit/amend...'), command='cuda_git_status.commit_amend_')
+            self.h_menu_commit_amend_combine = menu_proc(self.h_menu, MENU_ADD, caption=_('Combine... with previous commit (amend)'), command='cuda_git_status.commit_amend_combine_')
+            self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_("Edit previous commit's message (amend)"), command='cuda_git_status.commit_amend_')
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
             self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
@@ -283,7 +284,10 @@ class Command:
         fn_rel = git_relative_path(fn).replace(os.path.sep, '/') # convert Windows-style path separators to Unix-style (used in git)
         branch = gitmanager.branch()
         diffs = bool(gitmanager.diff(fn))
-        dirty = gitmanager.is_dirty()
+        #dirty = gitmanager.is_dirty()
+        #a, b = gitmanager.unpushed_info(branch)
+        list_staged = bool(self.run_git(["diff", "--name-only", "--staged"]))
+        no_commits_yet = 'No commits yet' in self.run_git(["status"])
 
         list_notstaged = self.run_git(["diff", "--name-only"])
             # list contains full paths (relative)
@@ -305,13 +309,11 @@ class Command:
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
 
         # 'commit'
-        list_staged = bool(self.run_git(["diff", "--name-only", "--staged"]))
-        no_commits_yet = 'No commits yet' in self.run_git(["status"])
-        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=((dirty and list_staged) or no_commits_yet))
+        menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=list_staged)
 
         # 'commit amend'
-        a, b = gitmanager.unpushed_info(branch)
-        menu_proc(self.h_menu_commit_amend, MENU_SET_ENABLED, command=bool(a) or bool(b))
+        menu_proc(self.h_menu_commit_amend_combine, MENU_SET_VISIBLE, command=not no_commits_yet and list_staged)
+        menu_proc(self.h_menu_commit_amend, MENU_SET_VISIBLE, command=not no_commits_yet and not list_staged)
 
         # 'push'
         en = 'use "git push" to publish your local commits' in self.run_git(["status"])
@@ -525,16 +527,23 @@ class Command:
                 self.show_memo(text, _('Git: Result of commit'))
             self.request_update(ed, 'commited')
 
-    def commit_amend_(self):
+    def commit_amend_common(self, label):
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        txt_ = dlg_input(_('Git: Commit/amend changes'), '')
+        text = self.run_git(['log','-1', '--pretty=format:%s'])
+        txt_ = dlg_input(label, text)
         if txt_:
             text = self.run_git(["commit", "--amend", "-m", txt_])
             if text:
                 self.show_memo(text, _('Git: Result of commit/amend'))
             self.request_update(ed, 'commited_amended')
+    
+    def commit_amend_combine_(self):
+        self.commit_amend_common(_('Git: Combine... with previous commit (amend)'))
+    
+    def commit_amend_(self):
+        self.commit_amend_common(_("Git: Edit previous commit's message (amend)"))
 
     def push_(self):
         if not self.is_git():
