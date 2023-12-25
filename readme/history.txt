@@ -1,3 +1,6 @@
+2023.12.25
+* change: replace "Commit/amend" menu item to 2 items: "Edit previous commit's message (amend)" + "Combine... with previous commit (amend)", which become visible only when needed (by @veksha)
+
 2023.12.16
 + add: save/restore sizes of Diff dialog
 + add: command 'Config' scrolls to plugin's section
