@@ -636,12 +636,11 @@ class Command:
             return msg_status(_('No Git repo'))
 
         if gitmanager.commit_count() > 0:
+            params = ["diff", "HEAD"]
             if outgoing:
                 last_commit_hash = self.run_git(['log', 'master', '-1', '--pretty=format:%h', fn])
                 if last_commit_hash:
                     params = ["diff", last_commit_hash, "HEAD"]
-            else:
-                params = ["diff", "HEAD"]
         else:
             params = ["diff", '--staged']
         if fn:
