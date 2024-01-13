@@ -274,6 +274,7 @@ class Command:
             self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_("Edit previous commit's message (amend)"), command='cuda_git_status.commit_amend_')
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
             self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
+            self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file-outgoing changes'), command='cuda_git_status.diff_outgoing')
             self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
@@ -624,15 +625,23 @@ class Command:
     def diff_(self):
         self.diff_ex(ed.get_filename())
 
+    def diff_outgoing(self):
+        self.diff_ex(ed.get_filename(), True)
+
     def diff_all_(self):
         self.diff_ex('')
 
-    def diff_ex(self, fn):
+    def diff_ex(self, fn, outgoing = False):
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
         if gitmanager.commit_count() > 0:
-            params = ["diff", "HEAD"]
+            if outgoing:
+                last_commit_hash = self.run_git(['log', 'master', '-1', '--pretty=format:%h', fn])
+                if last_commit_hash:
+                    params = ["diff", last_commit_hash, "HEAD"]
+            else:
+                params = ["diff", "HEAD"]
         else:
             params = ["diff", '--staged']
         if fn:
