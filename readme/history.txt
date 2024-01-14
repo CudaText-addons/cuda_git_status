@@ -1,3 +1,6 @@
+2024.01.14
+- fix: "Get log", "Get status" and alike dialogs are scaled according to DPI (by @veksha)
+
 2023.12.25
 * change: replace "Commit/amend" menu item to 2 items: "Edit previous commit's message (amend)" + "Combine... with previous commit (amend)", which become visible only when needed (by @veksha)
 
