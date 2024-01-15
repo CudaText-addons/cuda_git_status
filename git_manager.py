@@ -74,15 +74,33 @@ class GitManager:
             cwd = os.path.dirname(f)
         return cwd
 
-    def branch(self):
+    def branch_ex(self):
+        """
+        Returns tuple:
+        - str: branch name
+        - boolean: detached or not. 
+        """
         (exit_code, output) = self.run_git(["status", "-u", "no"], silence_errors=True)
         if exit_code != 0:
-            return ''
-        m = re.search(r"(?:at|branch)\s(.*?)\n",output)
+            return (None, None)
+        m = re.search(r"^On branch\s(.*?)\n",output)
         if m:
-            return m.group(1)
-        else:
-            return ''
+            return (m.group(1), False)
+        m = re.search(r"^HEAD detached at\s(.*?)\n",output)
+        if m:
+            return (m.group(1), True)
+        m = re.search(r"^HEAD detached from\s(.*?)\n",output)
+        if m:
+            s = m.group(1)
+            # find commit hash
+            (exit_code, output) = self.run_git(["rev-parse", '--short', 'HEAD'], silence_errors=True)
+            if exit_code == 0 and output:
+                s = output.strip()
+            return (s, True)
+        return (None, None)
+    
+    def branch(self):
+        return self.branch_ex()[0]
 
     def is_dirty(self):
         (exit_code, output) = self.run_git(["diff-index", "--quiet", "HEAD"], silence_errors=True)
@@ -171,7 +189,7 @@ class GitManager:
         self.filename = filename
         self.diff(filename)
 
-        branch = self.branch()
+        branch, detached = self.branch_ex()
         if not branch:
             return ""
         ret = branch
@@ -182,4 +200,6 @@ class GitManager:
             ret = ret + "-%d" % a
         if b:
             ret = ret + "+%d" % b
+        if detached:
+            ret = ret + " [detached]"
         return self.prefix + ret
