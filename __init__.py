@@ -445,6 +445,7 @@ class Command:
         })
 
         dlg_proc(h, DLG_CTL_FOCUS, name='btn_ok')
+        dlg_proc(h, DLG_SCALE)
         dlg_proc(h, DLG_SHOW_MODAL)
         dlg_proc(h, DLG_FREE)
 
