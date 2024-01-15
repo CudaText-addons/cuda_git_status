@@ -1,3 +1,6 @@
+2024.01.16
++ add: Commit message input dialog is now multi-line (by @veksha)
+
 2024.01.14
 - fix: "Get log", "Get status" and alike dialogs are scaled according to DPI (by @veksha)
 

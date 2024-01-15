@@ -517,11 +517,33 @@ class Command:
         else:
             msg_status(_('Git: no untracked files'))
 
+    def dlg_input_multiline(self, caption, label, text=''):
+        id_memo = 1
+        id_ok = 2
+        
+        c1 = chr(1)
+        text = '\n'.join([]
+            +[c1.join(['type=label', 'pos=6,5,200,0', 'cap='+label])]
+            +[c1.join(['type=memo', 'pos=6,25,400,220', 'val='+'\t'.join(text.split('\n'))])]
+            +[c1.join(['type=button', 'pos=200,230,300,0', 'cap=&OK', 'ex0=0'])]
+            +[c1.join(['type=button', 'pos=306,230,402,0', 'cap=Cancel'])]
+        )
+        
+        res = dlg_custom(caption, 408, 260, text)
+        if res is None:
+            return
+        
+        res, text = res
+        if res != id_ok:
+            return
+        text = text.splitlines()
+        return '\n'.join(text[id_memo].split('\t'))
+    
     def commit_(self):
         if not self.is_git():
             return msg_status(_('No Git repo'))
-
-        txt_ = dlg_input(_('Git: Commit changes'), '')
+            
+        txt_ = self.dlg_input_multiline(_('Git: Commit changes'), _('&Message:'))
         if txt_:
             text = self.run_git(["commit", "-m", txt_])
             if text:
@@ -533,7 +555,7 @@ class Command:
             return msg_status(_('No Git repo'))
 
         text = self.run_git(['log','-1', '--pretty=format:%s'])
-        txt_ = dlg_input(label, text)
+        txt_ = self.dlg_input_multiline(label, _('&Message:'), text)
         if txt_:
             text = self.run_git(["commit", "--amend", "-m", txt_])
             if text:
