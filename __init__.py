@@ -554,7 +554,7 @@ class Command:
         if not self.is_git():
             return msg_status(_('No Git repo'))
 
-        text = self.run_git(['log','-1', '--pretty=format:%s'])
+        text = self.run_git(['log','-1', '--pretty=format:%B'])
         txt_ = self.dlg_input_multiline(label, _('&Message:'), text)
         if txt_:
             text = self.run_git(["commit", "--amend", "-m", txt_])
