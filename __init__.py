@@ -548,7 +548,7 @@ class Command:
             text = self.run_git(["commit", "-m", txt_])
             if text:
                 self.show_memo(text, _('Git: Result of commit'))
-            self.request_update(ed, 'commited')
+            self.request_update(ed, 'committed')
 
     def commit_amend_common(self, label):
         if not self.is_git():
@@ -560,7 +560,7 @@ class Command:
             text = self.run_git(["commit", "--amend", "-m", txt_])
             if text:
                 self.show_memo(text, _('Git: Result of commit/amend'))
-            self.request_update(ed, 'commited_amended')
+            self.request_update(ed, 'committed_amended')
     
     def commit_amend_combine_(self):
         self.commit_amend_common(_('Git: Combine... with previous commit (amend)'))
