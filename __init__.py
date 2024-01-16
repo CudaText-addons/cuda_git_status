@@ -47,7 +47,7 @@ def gitman_loop(q_fns, q_badges):
         except Exception as e:
             print('ERROR: Git Status: {}'.format(e))
             q_badges.put((None, None)) # put None (to avoid blocking inside `on_timer`)
-            break
+            raise # print traceback
 #end Threaded
 
 class Command:
@@ -634,15 +634,22 @@ class Command:
 
         remote = remotes[index]
         branch = gitmanager.branch()
-        res = msg_box(
-            _("Do you really want to run 'git pull {} {}'?").format(remote,branch),
-            MB_OKCANCEL+MB_ICONQUESTION
-        )
-        if res == ID_OK:
-            text = self.run_git(["pull",remote,branch])
-            if text:
-                self.show_memo(text, _('Git: pull {} {}').format(remote,branch))
-            self.request_update(ed, 'pulled')
+        if branch.startswith(remote+'/'):
+            branch = branch[len(remote+'/'):]
+        
+        res = dlg_input(_("Run 'git pull' with parameters:"), remote+' '+branch)
+        if res is None:
+            return
+
+        pull_params = ['pull']
+        s = res.split(' ')
+        if len(s) == 2:
+            pull_params += s
+
+        text = self.run_git(pull_params)
+        if text:
+            self.show_memo(text, _('Git: {}').format(' '.join(pull_params)))
+        self.request_update(ed, 'pulled')
 
     def diff_(self):
         self.diff_ex(ed.get_filename())
