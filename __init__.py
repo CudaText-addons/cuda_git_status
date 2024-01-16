@@ -525,8 +525,8 @@ class Command:
         text = '\n'.join([]
             +[c1.join(['type=label', 'pos=6,5,200,0', 'cap='+label])]
             +[c1.join(['type=memo', 'pos=6,25,400,220', 'val='+'\t'.join(text.split('\n'))])]
-            +[c1.join(['type=button', 'pos=200,230,300,0', 'cap=&OK', 'ex0=0'])]
-            +[c1.join(['type=button', 'pos=306,230,402,0', 'cap=Cancel'])]
+            +[c1.join(['type=button', 'pos=200,230,300,0', 'cap=' + _('&OK'), 'ex0=0'])]
+            +[c1.join(['type=button', 'pos=306,230,402,0', 'cap=' + _('Cancel')])]
         )
         
         res = dlg_custom(caption, 408, 260, text)
