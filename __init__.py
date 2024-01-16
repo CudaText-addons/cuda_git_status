@@ -648,7 +648,7 @@ class Command:
 
         text = self.run_git(pull_params)
         if text:
-            self.show_memo(text, _('Git: {}').format(' '.join(pull_params)))
+            self.show_memo(text, 'Git: {}'.format(' '.join(pull_params)))
         self.request_update(ed, 'pulled')
 
     def diff_(self):
