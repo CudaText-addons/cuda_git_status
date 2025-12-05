@@ -1,5 +1,5 @@
 2025.12.05
-+add: Reset-commands
++ add: "Reset" commands (by @ildarkhasanshin)
 
 2024.01.16
 + add: Commit message input dialog is now multi-line (by @veksha)
