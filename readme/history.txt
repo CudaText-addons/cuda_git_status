@@ -1,3 +1,6 @@
+2025.12.05
++add: Reset-commands
+
 2024.01.16
 + add: Commit message input dialog is now multi-line (by @veksha)
 + add: support detached HEAD and show [detached] on badge (by @veksha)
