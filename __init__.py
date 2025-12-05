@@ -40,7 +40,7 @@ def gitman_loop(q_fns, q_badges):
             is_getting_badge.set()
             while not q_fns.empty():    # get last if have multiple requests
                 fn = q_fns.get()
-    
+
             _badge = gitmanager.badge(fn)
             q_badges.put((fn, _badge))
             is_getting_badge.clear()
@@ -184,12 +184,12 @@ class Command:
             * stop timer if thread is done
         """
         def stop(): timer_proc(TIMER_STOP, TIMERCALL, 0)
-        
+
         # stop timer if thread is not alive (that means exception occurred)
         if not self.t_gitman.is_alive():
             stop()
             return
-        
+
         ## --> "wait" version (slows down Main Thread, causes stuttering)
             #_fn, _badge = self.badge_results.get()
             #if (_fn, _badge) == (None, None): # means exception occurred
@@ -197,7 +197,7 @@ class Command:
                 #return
             #self.update(_fn, _badge)
         ## --<
-        
+
         ## --> "NOwait" version (Main Thread is happy)
         try:
             _fn, _badge = self.badge_results.get_nowait()
@@ -269,10 +269,18 @@ class Command:
             self.h_menu_restore   = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
 
+            self.h_menu_reset       = menu_proc(self.h_menu, MENU_ADD, caption=_('Reset'))
+            self.h_menu_reset_soft  = menu_proc(self.h_menu_reset, MENU_ADD, caption=_('Soft...'), command='cuda_git_status.reset_soft_')
+            self.h_menu_reset_mixed = menu_proc(self.h_menu_reset, MENU_ADD, caption=_('Mixed...'), command='cuda_git_status.reset_mixed_')
+            self.h_menu_reset_hard  = menu_proc(self.h_menu_reset, MENU_ADD, caption=_('Hard...'), command='cuda_git_status.reset_hard_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
             self.h_menu_commit       = menu_proc(self.h_menu, MENU_ADD, caption=_('Commit...'), command='cuda_git_status.commit_')
             self.h_menu_commit_amend_combine = menu_proc(self.h_menu, MENU_ADD, caption=_('Combine... with previous commit (amend)'), command='cuda_git_status.commit_amend_combine_')
             self.h_menu_commit_amend = menu_proc(self.h_menu, MENU_ADD, caption=_("Edit previous commit's message (amend)"), command='cuda_git_status.commit_amend_')
             self.h_menu_push         = menu_proc(self.h_menu, MENU_ADD, caption=_('Push...'), command='cuda_git_status.push_')
+            menu_proc(self.h_menu, MENU_ADD, caption='-')
+
             self.h_menu_diff         = menu_proc(self.h_menu, MENU_ADD, caption=_('View file changes'), command='cuda_git_status.diff_')
             self.h_menu_diff_all     = menu_proc(self.h_menu, MENU_ADD, caption=_('View all changes'), command='cuda_git_status.diff_all_')
             menu_proc(self.h_menu, MENU_ADD, caption='-')
@@ -307,6 +315,12 @@ class Command:
         menu_proc(self.h_menu_jump1, MENU_SET_ENABLED, command=diffs)
         menu_proc(self.h_menu_jump2, MENU_SET_ENABLED, command=diffs)
         menu_proc(self.h_menu_restore, MENU_SET_ENABLED, command=diffs)
+
+        # 'reset'
+        en = 'use "git push" to publish your local commits' in self.run_git(["status"])
+        menu_proc(self.h_menu_reset_soft, MENU_SET_ENABLED, command=en)
+        menu_proc(self.h_menu_reset_mixed, MENU_SET_ENABLED, command=en)
+        menu_proc(self.h_menu_reset_hard, MENU_SET_ENABLED, command=en)
 
         # 'commit'
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=list_staged)
@@ -480,6 +494,42 @@ class Command:
                 self.show_memo(text, _('Git: Log of restore file'))
             self.request_update(ed, 'restored')
 
+    def reset_soft_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you REALLY want to run 'git reset --soft HEAD~1'?"), MB_OKCANCEL+MB_ICONWARNING)
+        if res == ID_OK:
+            text = self.run_git(['reset', '--soft', 'HEAD~1'])
+            if text:
+                self.show_memo(text, _('Git: Log of reset soft'))
+            self.request_update(ed, 'reset_soft')
+
+    def reset_mixed_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you REALLY want to run 'git reset --mixed HEAD~1'?"), MB_OKCANCEL+MB_ICONWARNING)
+        if res == ID_OK:
+            text = self.run_git(['reset', '--mixed', 'HEAD~1'])
+            if text:
+                self.show_memo(text, _('Git: Log of reset mixed'))
+            self.request_update(ed, 'reset_mixed')
+
+    def reset_hard_(self):
+        if not self.is_git():
+            return msg_status(_('No Git repo'))
+
+        filename_ = ed.get_filename()
+        res = msg_box(_("Do you REALLY want to run 'git reset --hard HEAD~1'?"), MB_OKCANCEL+MB_ICONWARNING)
+        if res == ID_OK:
+            text = self.run_git(['reset', '--hard', 'HEAD~1'])
+            if text:
+                self.show_memo(text, _('Git: Log of reset hard'))
+            self.request_update(ed, 'reset_hard')
+
     def get_log_(self):
         count = 100
         text = self.run_git([
@@ -520,7 +570,7 @@ class Command:
     def dlg_input_multiline(self, caption, label, text=''):
         id_memo = 1
         id_ok = 2
-        
+
         c1 = chr(1)
         text = '\n'.join([]
             +[c1.join(['type=label', 'pos=6,5,200,0', 'cap='+label])]
@@ -528,21 +578,21 @@ class Command:
             +[c1.join(['type=button', 'pos=200,230,300,0', 'cap=' + _('&OK'), 'ex0=0'])]
             +[c1.join(['type=button', 'pos=306,230,402,0', 'cap=' + _('Cancel')])]
         )
-        
+
         res = dlg_custom(caption, 408, 260, text)
         if res is None:
             return
-        
+
         res, text = res
         if res != id_ok:
             return
         text = text.splitlines()
         return '\n'.join(text[id_memo].split('\t'))
-    
+
     def commit_(self):
         if not self.is_git():
             return msg_status(_('No Git repo'))
-            
+
         txt_ = self.dlg_input_multiline(_('Git: Commit changes'), _('&Message:'))
         if txt_:
             text = self.run_git(["commit", "-m", txt_])
@@ -561,10 +611,10 @@ class Command:
             if text:
                 self.show_memo(text, _('Git: Result of commit/amend'))
             self.request_update(ed, 'committed_amended')
-    
+
     def commit_amend_combine_(self):
         self.commit_amend_common(_('Git: Combine... with previous commit (amend)'))
-    
+
     def commit_amend_(self):
         self.commit_amend_common(_("Git: Edit previous commit's message (amend)"))
 
@@ -636,7 +686,7 @@ class Command:
         branch = gitmanager.branch()
         if branch.startswith(remote+'/'):
             branch = branch[len(remote+'/'):]
-        
+
         res = dlg_input(_("Run 'git pull' with parameters:"), remote+' '+branch)
         if res is None:
             return
