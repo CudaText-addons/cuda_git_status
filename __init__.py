@@ -267,7 +267,6 @@ class Command:
 
             self.h_menu_add       = menu_proc(self.h_menu, MENU_ADD, caption=_('Add file...'), command='cuda_git_status.add_file_')
             self.h_menu_restore   = menu_proc(self.h_menu, MENU_ADD, caption=_('Restore file...'), command='cuda_git_status.restore_file_')
-            menu_proc(self.h_menu, MENU_ADD, caption='-')
 
             self.h_menu_reset       = menu_proc(self.h_menu, MENU_ADD, caption=_('Reset'))
             self.h_menu_reset_soft  = menu_proc(self.h_menu_reset, MENU_ADD, caption=_('Soft...'), command='cuda_git_status.reset_soft_')
