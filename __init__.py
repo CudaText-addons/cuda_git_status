@@ -317,9 +317,7 @@ class Command:
 
         # 'reset'
         en = 'use "git push" to publish your local commits' in self.run_git(["status"])
-        menu_proc(self.h_menu_reset_soft, MENU_SET_ENABLED, command=en)
-        menu_proc(self.h_menu_reset_mixed, MENU_SET_ENABLED, command=en)
-        menu_proc(self.h_menu_reset_hard, MENU_SET_ENABLED, command=en)
+        menu_proc(self.h_menu_reset, MENU_SET_ENABLED, command=en)
 
         # 'commit'
         menu_proc(self.h_menu_commit, MENU_SET_ENABLED, command=list_staged)
