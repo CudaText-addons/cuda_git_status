@@ -1,3 +1,6 @@
+2026.03.05
++ add: Reopen current file after using "Git Status: Restore file" command to see changes faster (by @veksha)
+
 2025.12.05
 + add: "Reset" commands (by @ildarkhasanshin)
 

@@ -6,6 +6,7 @@ from . import git_manager
 from .git_manager import GitManager
 
 from cudatext import *
+import cudatext_cmd as cmds
 from cudax_lib import get_translation
 _ = get_translation(__file__)  # I18N
 
@@ -487,6 +488,7 @@ class Command:
         res = msg_box(_("Do you REALLY want to restore this file?"), MB_OKCANCEL+MB_ICONWARNING)
         if res == ID_OK:
             text = self.run_git(["restore", filename_])
+            ed.cmd(cmds.cmd_FileReopen)
             if text:
                 self.show_memo(text, _('Git: Log of restore file'))
             self.request_update(ed, 'restored')
