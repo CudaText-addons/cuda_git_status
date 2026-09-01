@@ -22,6 +22,7 @@ class GitManager:
             my_env = os.environ.copy()
             # removing GIT environment vars if any, they are interfering with our git calls
             my_env = { k:v for k,v in my_env.items() if not k.upper().startswith('GIT_') }
+            my_env["LANG"] = "en_US"
             if os.name=='nt':
                 # make sure console does not come up
                 startupinfo = subprocess.STARTUPINFO()
@@ -35,7 +36,6 @@ class GitManager:
                                      env=my_env)
             else:
                 my_env["PATH"] = "/usr/local/bin:/usr/bin:" + my_env["PATH"]
-                my_env["LANG"] = "en_US"
                 p = subprocess.Popen(cmd,
                                      stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE,
