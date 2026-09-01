@@ -1,3 +1,6 @@
+2026.09.01
+- fix: very rare case - non-english git on Windows was not playing well with cuda_git_status (by @veksha)
+
 2026.03.05
 + add: Reopen current file after using "Git Status: Restore file" command to see changes faster (by @veksha)
 
